@@ -56,7 +56,7 @@ A página guia o usuário através de uma análise completa, abordando a perda h
 
 <div align="center">
   <a href="https://voaneves.com/salarioaleto/">
-    <img src="https://placehold.co/800x450/f8fafc/334155?text=Screenshot+do+Projeto" alt="Screenshot da página inicial">
+    <img src="assets/img/screenshot.png" alt="Screenshot da página inicial">
   </a>
 </div>
 <p align="center"><i>Substitua a imagem acima por um screenshot real do projeto.</i></p>

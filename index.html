@@ -10,14 +10,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
-        body { visibility: hidden; }
+        body { 
+            visibility: hidden;
+            background-color: #f8fafc;
+        }
         .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 400px; max-height: 50vh; }
         @media (min-width: 768px) { .chart-container { height: 450px; } }
-        /* Estilos complexos como os da timeline são mantidos aqui */
         .timeline-item { position: relative; padding-left: 2.5rem; padding-bottom: 2rem; }
         .timeline-item:last-child { padding-bottom: 0; }
         .timeline-item::before { content: ''; position: absolute; left: 0; top: 0.5rem; width: 2px; height: 100%; background-color: #e2e8f0; }
         .timeline-item .dot { position: absolute; left: -0.45rem; top: 0.5rem; height: 1.125rem; width: 1.125rem; border-radius: 9999px; border: 3px solid white; }
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="text-slate-700 font-['Inter',_sans-serif]">
@@ -27,70 +38,88 @@
             <a href="#inicio" class="block transition-transform duration-300 hover:scale-105" aria-label="Início">
                 <img loading="lazy" src="assets/img/logo.svg" alt="Logotipo Dossiê Salarial ALETO" class="h-14 w-auto">
             </a>
-            <div class="hidden md:flex space-x-6 text-sm font-medium">
-                <a href="#perda-salarial" class="transition-all duration-300 hover:text-amber-500 hover:-translate-y-px">Perda Real</a>
-                <a href="#comparativo" class="transition-all duration-300 hover:text-amber-500 hover:-translate-y-px">Disparidade</a>
-                <a href="#carreira" class="transition-all duration-300 hover:text-amber-500 hover:-translate-y-px">Carreira</a>
-                <a href="#evasao" class="transition-all duration-300 hover:text-amber-500 hover:-translate-y-px">Evasão</a>
-                <a href="#tabelas" class="transition-all duration-300 hover:text-amber-500 hover:-translate-y-px">Tabelas</a>
-                <a href="#reivindicacoes" class="transition-all duration-300 hover:text-amber-500 hover:-translate-y-px">Reivindicações</a>
+            
+            <div class="hidden md:flex justify-end space-x-6 text-sm font-medium" id="desktop-menu">
+                <a href="#perda-salarial" class="transition-all duration-300 hover:text-amber-500 hover:-translate-y-px whitespace-nowrap">Perda Real</a>
+                <a href="#comparativo" class="transition-all duration-300 hover:text-amber-500 hover:-translate-y-px whitespace-nowrap">Disparidade</a>
+                <a href="#carreira" class="transition-all duration-300 hover:text-amber-500 hover:-translate-y-px whitespace-nowrap">Carreira</a>
+                <a href="#evasao" class="transition-all duration-300 hover:text-amber-500 hover:-translate-y-px whitespace-nowrap">Evasão</a>
+                <a href="#tabelas" class="transition-all duration-300 hover:text-amber-500 hover:-translate-y-px whitespace-nowrap">Tabelas</a>
+                <a href="#reivindicacoes" class="transition-all duration-300 hover:text-amber-500 hover:-translate-y-px whitespace-nowrap">Reivindicações</a>
+            </div>
+    
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-slate-700 hover:text-amber-500 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
             </div>
         </nav>
+    
+        <div class="hidden md:hidden bg-white/95 backdrop-blur-lg border-t border-slate-200" id="mobile-menu">
+            <a href="#perda-salarial" class="mobile-menu-link block text-sm font-medium text-slate-700 py-3 px-6 text-center hover:bg-amber-50 transition-colors duration-200">Perda Real</a>
+            <a href="#comparativo" class="mobile-menu-link block text-sm font-medium text-slate-700 py-3 px-6 text-center hover:bg-amber-50 transition-colors duration-200">Disparidade</a>
+            <a href="#carreira" class="mobile-menu-link block text-sm font-medium text-slate-700 py-3 px-6 text-center hover:bg-amber-50 transition-colors duration-200">Carreira</a>
+            <a href="#evasao" class="mobile-menu-link block text-sm font-medium text-slate-700 py-3 px-6 text-center hover:bg-amber-50 transition-colors duration-200">Evasão</a>
+            <a href="#tabelas" class="mobile-menu-link block text-sm font-medium text-slate-700 py-3 px-6 text-center hover:bg-amber-50 transition-colors duration-200">Tabelas</a>
+            <a href="#reivindicacoes" class="mobile-menu-link block text-sm font-medium text-slate-700 py-3 px-6 text-center hover:bg-amber-50 transition-colors duration-200">Reivindicações</a>
+        </div>
     </header>
 
     <main class="container mx-auto px-6 py-8 md:py-12">
 
-        <section id="inicio" class="text-center mb-16">
-            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-4">Um Retrato da Desvalorização do Servidor Legislativo</h2>
-            <p class="max-w-3xl mx-auto text-lg text-slate-600 mb-10">
+        <section id="inicio" class="text-center mb-16 pt-4"> <h2 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-4 bg-gradient-to-br from-slate-800 to-slate-600 bg-clip-text text-transparent py-2">Um Retrato da <span class="bg-gradient-to-br from-amber-500 to-red-600 bg-clip-text text-transparent">Desvalorização</span> do Servidor Legislativo</h2>
+            
+            <p class="max-w-3xl mx-auto text-lg text-slate-600 mb-10 fade-in-section">
                 A Lei nº 4.662/2025 instituiu uma nova estrutura remuneratória que, em vez de valorizar, representa um retrocesso histórico para os cargos da ALETO. Este dossiê interativo detalha a perda do poder de compra, a disparidade com outros órgãos, a inviabilidade da carreira e a consequente evasão de talentos, fornecendo uma base sólida para a busca de uma reestruturação justa e necessária.
             </p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                <div class="bg-white rounded-xl p-6 shadow-md border border-slate-200 flex flex-col justify-center items-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-amber-400"><span class="text-4xl font-bold text-amber-600">-45,9%</span><p class="mt-2 text-sm font-medium">Perda real do poder de compra do salário de Técnico desde 2019.</p></div>
-                <div class="bg-white rounded-xl p-6 shadow-md border border-slate-200 flex flex-col justify-center items-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-amber-400"><span class="text-4xl font-bold text-amber-600">+94,6%</span><p class="mt-2 text-sm font-medium">É a diferença do vencimento inicial de Analista do TJTO em relação à ALETO.</p></div>
-                <div class="bg-white rounded-xl p-6 shadow-md border border-slate-200 flex flex-col justify-center items-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-amber-400"><span class="text-4xl font-bold text-amber-600">106 Anos</span><p class="mt-2 text-sm font-medium">Tempo necessário para um Técnico Legislativo atingir o topo da carreira.</p></div>
+                <div class="bg-white rounded-xl p-6 shadow-md border border-slate-200 flex flex-col justify-center items-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/20 hover:border-amber-400 fade-in-section"><span id="counter1" class="text-4xl font-bold text-amber-600">0</span><p class="mt-2 text-sm font-medium">Perda real do poder de compra do salário de Técnico desde 2019.</p></div>
+                <div class="bg-white rounded-xl p-6 shadow-md border border-slate-200 flex flex-col justify-center items-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/20 hover:border-amber-400 fade-in-section" style="transition-delay: 150ms;"><span id="counter2" class="text-4xl font-bold text-amber-600">0</span><p class="mt-2 text-sm font-medium">É a diferença do vencimento inicial de Analista do TJTO em relação à ALETO.</p></div>
+                <div class="bg-white rounded-xl p-6 shadow-md border border-slate-200 flex flex-col justify-center items-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/20 hover:border-amber-400 fade-in-section" style="transition-delay: 300ms;"><span id="counter3" class="text-4xl font-bold text-amber-600">0</span><p class="mt-2 text-sm font-medium">Tempo necessário para um Técnico Legislativo atingir o topo da carreira.</p></div>
             </div>
         </section>
 
-        <section id="timeline" class="py-16 mb-16">
-             <div class="text-center mb-12 px-6">
-                 <h3 class="text-3xl font-bold text-slate-800 mb-3">Linha do Tempo da Desvalorização</h3>
-                 <p class="max-w-3xl mx-auto text-slate-600">
-                     A trajetória do vencimento inicial para Analista Legislativo revela um percurso de retrocessos. O que começou como um patamar competitivo em 2019 foi drasticamente reduzido, e a lei atual apenas consolida uma perda significativa em relação ao valor original.
-                 </p>
-             </div>
-             <div class="max-w-3xl mx-auto">
-                 <div class="timeline-item group">
-                     <div class="dot bg-green-500 transition-all duration-300 group-hover:bg-amber-500 group-hover:scale-125"></div>
-                     <h4 class="font-bold text-lg text-slate-800">2019 (Original) - Ponto de Partida</h4>
-                     <p class="text-sm text-slate-500 mb-2">Lei nº 3.543 (Anexo I)</p>
-                     <p class="text-slate-600">O vencimento inicial para Analista era de <span class="font-bold text-green-600">R$ 8.505,93</span>, estabelecendo um padrão competitivo e valorizado para a carreira.</p>
-                 </div>
-                 <div class="timeline-item group">
-                     <div class="dot bg-red-500 transition-all duration-300 group-hover:bg-amber-500 group-hover:scale-125"></div>
-                     <h4 class="font-bold text-lg text-slate-800">2019 (Alteração) - O Retrocesso</h4>
-                      <p class="text-sm text-slate-500 mb-2">Lei nº 3.543 (Anexo II)</p>
-                     <p class="text-slate-600">Uma alteração legislativa no mesmo ano reduziu drasticamente o valor inicial para <span class="font-bold text-red-600">R$ 5.062,73</span>, uma perda nominal de 40,5%.</p>
-                 </div>
-                 <div class="timeline-item group">
-                     <div class="dot bg-amber-500 transition-all duration-300 group-hover:bg-amber-500 group-hover:scale-125"></div>
-                     <h4 class="font-bold text-lg text-slate-800">2025 (Atual) - Perda Consolidada</h4>
-                      <p class="text-sm text-slate-500 mb-2">Lei nº 4.662</p>
-                     <p class="text-slate-600">A lei vigente fixa o inicial em <span class="font-bold text-amber-600">R$ 6.141,47</span>. Embora maior que o valor alterado, ainda é 27,8% inferior ao patamar original de 2019, consolidando a desvalorização.</p>
-                 </div>
-             </div>
+        <section id="timeline" class="py-16 mb-16 fade-in-section">
+            <div class="text-center mb-12 px-6">
+                <h3 class="text-3xl font-bold text-slate-800 mb-3">Linha do Tempo da Desvalorização</h3>
+                <p class="max-w-3xl mx-auto text-slate-600">
+                    A trajetória do vencimento inicial para Analista Legislativo revela um percurso de retrocessos. O que começou como um patamar competitivo em 2019 foi drasticamente reduzido, e a lei atual apenas consolida uma perda significativa em relação ao valor original.
+                </p>
+            </div>
+            <div class="max-w-3xl mx-auto">
+                <div class="timeline-item group">
+                    <div class="dot bg-green-500 transition-all duration-300 group-hover:bg-amber-500 group-hover:scale-125"></div>
+                    <h4 class="font-bold text-lg text-slate-800">2019 (Original) - Ponto de Partida</h4>
+                    <p class="text-sm text-slate-500 mb-2">Lei nº 3.543 (Anexo I)</p>
+                    <p class="text-slate-600">O vencimento inicial para Analista era de <span class="font-bold text-green-600">R$ 8.505,93</span>, estabelecendo um padrão competitivo e valorizado para a carreira.</p>
+                </div>
+                <div class="timeline-item group">
+                    <div class="dot bg-red-500 transition-all duration-300 group-hover:bg-amber-500 group-hover:scale-125"></div>
+                    <h4 class="font-bold text-lg text-slate-800">2019 (Alteração) - O Retrocesso</h4>
+                    <p class="text-sm text-slate-500 mb-2">Lei nº 3.543 (Anexo II)</p>
+                    <p class="text-slate-600">Uma alteração legislativa no mesmo ano reduziu drasticamente o valor inicial para <span class="font-bold text-red-600">R$ 5.062,73</span>, uma perda nominal de 40,5%.</p>
+                </div>
+                <div class="timeline-item group">
+                    <div class="dot bg-amber-500 transition-all duration-300 group-hover:bg-amber-500 group-hover:scale-125"></div>
+                    <h4 class="font-bold text-lg text-slate-800">2025 (Atual) - Perda Consolidada</h4>
+                    <p class="text-sm text-slate-500 mb-2">Lei nº 4.662</p>
+                    <p class="text-slate-600">A lei vigente fixa o inicial em <span class="font-bold text-amber-600">R$ 6.141,47</span>. Embora maior que o valor alterado, ainda é 27,8% inferior ao patamar original de 2019, consolidando a desvalorização.</p>
+                </div>
+            </div>
         </section>
 
-        <section id="perda-salarial" class="py-16 bg-white rounded-2xl shadow-sm border border-slate-200 mb-16">
+        <section id="perda-salarial" class="py-16 bg-white rounded-2xl shadow-sm border border-slate-200 mb-16 fade-in-section">
             <div class="text-center mb-12 px-6">
                 <h3 class="text-3xl font-bold text-slate-800 mb-3">A Redução do Vencimento Real</h3>
                 <p class="max-w-3xl mx-auto text-slate-600">
                     A comparação do vencimento atual com o valor histórico de 2019, corrigido pela inflação, não revela estagnação, mas um retrocesso explícito. A perda de poder de compra para ambos os cargos supera 40%, um fato que desvaloriza o cargo e a instituição.
                 </p>
-                 <div class="mt-8 flex justify-center space-x-4">
-                     <button id="btnAnalistaPerda" class="px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200">Analista</button>
-                     <button id="btnTecnicoPerda" class="px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200">Técnico/Policial</button>
-                 </div>
+                <div class="mt-8 flex justify-center space-x-4">
+                    <button id="btnAnalistaPerda" class="px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200">Analista</button>
+                    <button id="btnTecnicoPerda" class="px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200">Técnico/Policial</button>
+                </div>
             </div>
             <div class="chart-container">
                 <canvas id="perdaSalarialChart"></canvas>
@@ -101,7 +130,7 @@
             </div>
         </section>
 
-        <section id="comparativo" class="py-16 mb-16">
+        <section id="comparativo" class="py-16 mb-16 fade-in-section">
             <div class="text-center mb-12 px-6">
                 <h3 class="text-3xl font-bold text-slate-800 mb-3">Disparidade Salarial: A ALETO no Cenário Estadual</h3>
                 <p class="max-w-3xl mx-auto text-slate-600">
@@ -117,15 +146,15 @@
                     <canvas id="comparativoSalarialChart"></canvas>
                 </div>
             </div>
-             <div class="max-w-3xl mx-auto mt-12 px-6 text-slate-600 text-justify text-sm space-y-4">
+            <div class="max-w-3xl mx-auto mt-12 px-6 text-slate-600 text-justify text-sm space-y-4">
                 <h4 class="font-bold text-slate-800 text-lg text-center">Análise Jurídica: O Princípio da Isonomia</h4>
                 <p>O princípio da isonomia (Art. 39, § 1º, CF) estabelece um norte para o equilíbrio entre os Poderes. Embora a Súmula Vinculante 37 do STF vede que o Judiciário imponha aumentos com base na isonomia, ela não anula o princípio. Pelo contrário, reforça que a responsabilidade de corrigir distorções é do próprio legislador. A luta pela isonomia na ALETO é uma demanda por uma decisão legislativa consciente, que reconheça que um Legislativo com corpo técnico mal remunerado tem sua capacidade de fiscalizar os demais Poderes — mais bem pagos e mais atraentes para talentos — severamente diminuída.</p>
             </div>
         </section>
 
-        <section id="carreira" class="py-16 bg-slate-800 text-white rounded-2xl mb-16">
+        <section id="carreira" class="py-16 bg-slate-800 text-white rounded-2xl mb-16 fade-in-section">
             <div class="text-center mb-12 px-6">
-                <h3 class="text-3xl font-bold mb-3">Uma Carreira Inatingível</h3>
+                <h3 class="text-3xl font-bold mb-3">Uma Carreira Inatingível: A Ficção Jurídica</h3>
                 <p class="max-w-3xl mx-auto text-slate-300">
                     O plano de carreira da ALETO não é um caminho de desenvolvimento, mas um labirinto sem saída. O tempo necessário para atingir o topo ultrapassa a expectativa de uma vida de trabalho, tornando a progressão uma promessa vazia e violando o princípio da eficiência.
                 </p>
@@ -147,7 +176,7 @@
             </div>
         </section>
 
-        <section id="evasao" class="py-16 mb-16">
+        <section id="evasao" class="py-16 mb-16 fade-in-section">
             <div class="text-center mb-12 px-6">
                 <h3 class="text-3xl font-bold text-slate-800 mb-3">Consequência Real: A Evasão de Talentos</h3>
                 <p class="max-w-3xl mx-auto text-slate-600">
@@ -165,7 +194,7 @@
             </div>
         </section>
 
-        <section id="tabelas" class="py-16 bg-white rounded-2xl shadow-sm border border-slate-200 mb-16">
+        <section id="tabelas" class="py-16 bg-white rounded-2xl shadow-sm border border-slate-200 mb-16 fade-in-section">
             <div class="text-center mb-12 px-6">
                 <h3 class="text-3xl font-bold text-slate-800 mb-3">Anexos: Tabelas de Vencimentos</h3>
                 <p class="max-w-3xl mx-auto text-slate-600">Navegue pelas abas para comparar as estruturas de carreira completas entre a ALETO e outros órgãos do Estado do Tocantins.</p>
@@ -181,11 +210,11 @@
                     </nav>
                 </div>
                 <div id="tab-content" class="overflow-x-auto">
-                    </div>
+                </div>
             </div>
         </section>
 
-        <section id="reivindicacoes" class="py-16">
+        <section id="reivindicacoes" class="py-16 fade-in-section">
             <div class="text-center mb-10 px-6">
                 <h3 class="text-3xl font-bold text-slate-800 mb-3">Pauta de Reivindicações</h3>
                 <p class="max-w-3xl mx-auto text-slate-600">
@@ -193,7 +222,7 @@
                 </p>
             </div>
             <div class="max-w-4xl mx-auto px-6 space-y-4">
-                 <div class="p-6 bg-slate-50 rounded-lg border border-slate-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300">
+                <div class="p-6 bg-slate-50 rounded-lg border border-slate-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300">
                     <h4 class="font-bold text-slate-800 mb-2">1. Revisão Imediata da Tabela Remuneratória</h4>
                     <p class="text-sm text-slate-600">Propor um Projeto de Lei para alterar o Anexo da Lei nº 4.662/2025, estabelecendo como novos vencimentos iniciais, no mínimo, os valores que recompõem o poder de compra de 2019: <strong class="text-slate-900">R$ 10.318,87</strong> para Analista e <strong class="text-slate-900">R$ 7.686,76</strong> para Técnico/Policial.</p>
                 </div>
@@ -201,7 +230,7 @@
                     <h4 class="font-bold text-slate-800 mb-2">2. Reestruturação Racional do Plano de Carreira</h4>
                     <p class="text-sm text-slate-600">Reduzir o número de padrões para um total entre 15 e 20 e o interstício de progressão para 12 ou 18 meses, criando um modelo exequível e alinhado às boas práticas do setor público.</p>
                 </div>
-                 <div class="p-6 bg-slate-50 rounded-lg border border-slate-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300">
+                <div class="p-6 bg-slate-50 rounded-lg border border-slate-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300">
                     <h4 class="font-bold text-slate-800 mb-2">3. Ação Política e Institucional</h4>
                     <p class="text-sm text-slate-600">Protocolar este relatório junto à Mesa Diretora, distribuir aos Deputados e dar ampla publicidade ao problema, enquadrando-o como uma defesa da eficiência e da força institucional do Poder Legislativo do Tocantins.</p>
                 </div>
@@ -210,10 +239,9 @@
 
     </main>
 
-    <footer class="bg-slate-800 dark:bg-slate-900 border-t border-slate-700 dark:border-slate-800 text-slate-300 py-8 mt-16">
+    <footer class="bg-slate-800 text-slate-300 py-8 mt-16 border-t border-slate-700">
         <div class="container mx-auto px-6 text-center">
-            <a href="https://github.com/voaneves/salarioaleto" target="_blank" rel="noopener noreferrer" 
-               class="group inline-flex items-center justify-center bg-slate-700/50 dark:bg-slate-800/50 border border-slate-600 dark:border-slate-700 rounded-lg px-6 py-4 transition-all duration-300 hover:border-amber-500/50 hover:bg-slate-700 dark:hover:bg-slate-800 shadow-lg hover:shadow-amber-500/10">
+            <a href="https://github.com/voaneves/salarioaleto" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center justify-center bg-slate-700/50 border border-slate-600 rounded-lg px-6 py-4 transition-all duration-300 hover:border-amber-500/50 hover:bg-slate-700 shadow-lg hover:shadow-amber-500/10">
                 <svg class="w-8 h-8 text-slate-400 group-hover:text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" />
                 </svg>
@@ -221,7 +249,7 @@
                     <p class="font-bold text-white group-hover:text-amber-400 transition-colors duration-300">Repositório no GitHub</p>
                     <p class="text-xs text-slate-400">Veja o código-fonte e contribua</p>
                 </div>
-                <div class="ml-6 border-l border-slate-600 dark:border-slate-700 pl-4">
+                <div class="ml-6 border-l border-slate-600 pl-4">
                      <svg class="w-6 h-6 text-slate-400 group-hover:text-amber-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 </div>
             </a>
@@ -231,22 +259,108 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             document.body.style.visibility = 'visible';
+            
+            // --- NOVO: LÓGICA PARA O MENU RESPONSIVO ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Fecha o menu ao clicar em um link
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // O restante do seu script...
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, {
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            const sections = document.querySelectorAll('.fade-in-section');
+            sections.forEach(section => observer.observe(section));
+
+            function animateCounter(element, start, end, duration, prefix = '', suffix = '') {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    let current = progress * (end - start) + start;
+                    
+                    if (end % 1 !== 0) {
+                        element.innerHTML = prefix + current.toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + suffix;
+                    } else {
+                        element.innerHTML = prefix + Math.floor(current).toLocaleString('pt-BR') + suffix;
+                    }
+                    
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    } else {
+                         element.innerHTML = prefix + end.toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1}).replace(',0', '') + suffix;
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            const counterObserver = new IntersectionObserver((entries, observerInstance) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        if (el.id === 'counter1') animateCounter(el, 0, -45.9, 1500, '', '%');
+                        if (el.id === 'counter2') animateCounter(el, 0, 94.6, 1500, '+', '%');
+                        if (el.id === 'counter3') animateCounter(el, 0, 106, 1500, '', ' Anos');
+                        observerInstance.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            counterObserver.observe(document.getElementById('counter1'));
+            counterObserver.observe(document.getElementById('counter2'));
+            counterObserver.observe(document.getElementById('counter3'));
 
             const formatCurrency = (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-
-            // --- Classes de Estilo Tailwind ---
             const activeBtnClasses = ['bg-slate-800', 'text-white'];
             const inactiveBtnClasses = ['bg-slate-200', 'text-slate-600', 'hover:bg-slate-300'];
             const activeTabClasses = ['border-amber-500', 'text-slate-900', 'bg-white'];
             const inactiveTabClasses = ['border-transparent', 'text-slate-500', 'hover:text-slate-700', 'hover:bg-slate-100', 'hover:border-slate-300'];
 
-            // --- Gráfico de Perda Salarial ---
             const perdaSalarialData = {
                 analista: { labels: ['Venc. 2019 (Original)', 'Venc. 2019 (Corrigido p/ 2025)', 'Venc. 2025 (Lei 4.662)'], datasets: [{ label: 'Vencimento Inicial Analista (R$)', data: [8505.93, 10318.87, 6141.47], backgroundColor: ['rgba(100, 116, 139, 0.6)','rgba(51, 65, 85, 0.6)','rgba(245, 158, 11, 0.6)'], borderColor: ['rgb(100, 116, 139)','rgb(51, 65, 85)','rgb(245, 158, 11)'], borderWidth: 1 }] },
                 tecnico: { labels: ['Venc. 2019 (Original)', 'Venc. 2019 (Corrigido p/ 2025)', 'Venc. 2025 (Lei 4.662)'], datasets: [{ label: 'Vencimento Inicial Técnico (R$)', data: [6337.23, 7686.76, 4156.80], backgroundColor: ['rgba(100, 116, 139, 0.6)','rgba(51, 65, 85, 0.6)','rgba(245, 158, 11, 0.6)'], borderColor: ['rgb(100, 116, 139)','rgb(51, 65, 85)','rgb(245, 158, 11)'], borderWidth: 1 }] }
             };
             const perdaSalarialCtx = document.getElementById('perdaSalarialChart').getContext('2d');
-            const perdaSalarialChart = new Chart(perdaSalarialCtx, { type: 'bar', data: perdaSalarialData.analista, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => formatCurrency(c.raw) } }, title: { display: true, text: 'Comparativo do Vencimento Inicial de Analista Legislativo', font: { size: 16, family: 'Inter' }, color: '#334155' } }, scales: { y: { beginAtZero: true, ticks: { callback: (v) => formatCurrency(v) } } } } });
+            const perdaSalarialChart = new Chart(perdaSalarialCtx, { 
+                type: 'bar', 
+                data: perdaSalarialData.analista, 
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    layout: {
+                        padding: {
+                            left: 20,
+                            right: 20,
+                            top: 15,
+                            bottom: 5
+                        }
+                    },
+                    plugins: { 
+                        legend: { display: false }, 
+                        tooltip: { callbacks: { label: (c) => formatCurrency(c.raw) } }, 
+                        title: { display: true, text: 'Comparativo do Vencimento Inicial de Analista Legislativo', font: { size: 16, family: 'Inter' }, color: '#334155' } 
+                    }, 
+                    scales: { y: { beginAtZero: true, ticks: { callback: (v) => formatCurrency(v) } } } 
+                } 
+            });
             
             const btnAnalistaPerda = document.getElementById('btnAnalistaPerda');
             const btnTecnicoPerda = document.getElementById('btnTecnicoPerda');
@@ -262,37 +376,35 @@
             }
             btnAnalistaPerda.addEventListener('click', () => updatePerdaSalarialChart('analista'));
             btnTecnicoPerda.addEventListener('click', () => updatePerdaSalarialChart('tecnico'));
-            updatePerdaSalarialChart('analista'); // Initial state
+            updatePerdaSalarialChart('analista');
 
-
-            // --- Gráfico Comparativo ---
             const comparativoData = {
                 superior: { labels: ['ALETO', 'MPTO', 'PCTO', 'DPETO', 'TJTO'], datasets: [{ label: 'Vencimento Básico Inicial (R$)', data: [6141.47, 11394.51, 10710.83, 11804.10, 13944.81], backgroundColor: 'rgba(51, 65, 85, 0.7)', borderColor: 'rgb(51, 65, 85)', borderWidth: 1 }] },
                 medio: { labels: ['ALETO', 'MPTO', 'DPETO', 'TJTO'], datasets: [{ label: 'Vencimento Básico Inicial (R$)', data: [4156.80, 5874.51, 5669.19, 8329.27], backgroundColor: 'rgba(245, 158, 11, 0.7)', borderColor: 'rgb(245, 158, 11)', borderWidth: 1 }] }
             };
             const comparativoCtx = document.getElementById('comparativoSalarialChart').getContext('2d');
-            const comparativoChart = new Chart(comparativoCtx, {
-                type: 'bar',
-                data: comparativoData.superior,
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { callbacks: { label: (c) => formatCurrency(c.raw) } },
-                        title: { display: true, text: 'Comparativo de Vencimentos Básicos Iniciais - Nível Superior', font: { size: 16, family: 'Inter' }, color: '#334155' }
-                    },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            max: 15000, // <-- ADICIONE ESTA LINHA
-                            ticks: {
-                                callback: (v) => formatCurrency(v)
-                            }
+            const comparativoChart = new Chart(comparativoCtx, { 
+                type: 'bar', 
+                data: comparativoData.superior, 
+                options: { 
+                    indexAxis: 'y', 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    layout: {
+                        padding: {
+                            left: 20,
+                            right: 20,
+                            top: 15,
+                            bottom: 5
                         }
-                    }
-                }
+                    },
+                    plugins: { 
+                        legend: { display: false }, 
+                        tooltip: { callbacks: { label: (c) => formatCurrency(c.raw) } }, 
+                        title: { display: true, text: 'Comparativo de Vencimentos Básicos Iniciais - Nível Superior', font: { size: 16, family: 'Inter' }, color: '#334155' } 
+                    }, 
+                    scales: { x: { beginAtZero: true, max: 15000, ticks: { callback: (v) => formatCurrency(v) } } } 
+                } 
             });
 
             const btnSuperior = document.getElementById('btnNivelSuperior');
@@ -309,16 +421,14 @@
             }
             btnSuperior.addEventListener('click', () => updateComparativoChart('superior'));
             btnMedio.addEventListener('click', () => updateComparativoChart('medio'));
-            updateComparativoChart('superior'); // Initial state
+            updateComparativoChart('superior');
 
-
-            // --- Lógica das Abas e Tabelas ---
             const salaryData = {
                 aleto: { source: "Lei nº 4.662 de 30 de abril de 2025", analista: [ { "CLASSE": "A", "PADRÃO": 1, "VENCIMENTO": 6141.47 }, { "CLASSE": "A", "PADRÃO": 2, "VENCIMENTO": 6448.54 }, { "CLASSE": "A", "PADRÃO": 3, "VENCIMENTO": 6770.97 }, { "CLASSE": "A", "PADRÃO": 4, "VENCIMENTO": 7109.52 }, { "CLASSE": "A", "PADRÃO": 5, "VENCIMENTO": 7465 }, { "CLASSE": "A", "PADRÃO": 6, "VENCIMENTO": 7838.24 }, { "CLASSE": "B", "PADRÃO": 7, "VENCIMENTO": 8230.16 }, { "CLASSE": "B", "PADRÃO": 8, "VENCIMENTO": 8641.67 }, { "CLASSE": "B", "PADRÃO": 9, "VENCIMENTO": 9073.75 }, { "CLASSE": "B", "PADRÃO": 10, "VENCIMENTO": 9527.44 }, { "CLASSE": "B", "PADRÃO": 11, "VENCIMENTO": 10003.81 }, { "CLASSE": "B", "PADRÃO": 12, "VENCIMENTO": 10504 }, { "CLASSE": "C", "PADRÃO": 13, "VENCIMENTO": 11029.2 }, { "CLASSE": "C", "PADRÃO": 14, "VENCIMENTO": 11580.66 }, { "CLASSE": "C", "PADRÃO": 15, "VENCIMENTO": 12159.69 }, { "CLASSE": "C", "PADRÃO": 16, "VENCimento": 12767.68 }, { "CLASSE": "C", "PADRÃO": 17, "VENCIMENTO": 13406.06 }, { "CLASSE": "C", "PADRÃO": 18, "VENCIMENTO": 14076.36 }, { "CLASSE": "D", "PADRÃO": 19, "VENCIMENTO": 14780.18 }, { "CLASSE": "D", "PADRÃO": 20, "VENCIMENTO": 15519.19 }, { "CLASSE": "D", "PADRÃO": 21, "VENCIMENTO": 16295.15 }, { "CLASSE": "D", "PADRÃO": 22, "VENCIMENTO": 17109.91 }, { "CLASSE": "D", "PADRÃO": 23, "VENCIMENTO": 17965.4 }, { "CLASSE": "D", "PADRÃO": 24, "VENCIMENTO": 18863.67 }, { "CLASSE": "E", "PADRÃO": 25, "VENCIMENTO": 19806.85 }, { "CLASSE": "E", "PADRÃO": 26, "VENCIMENTO": 20797.2 }, { "CLASSE": "E", "PADRÃO": 27, "VENCIMENTO": 21837.06 }, { "CLASSE": "E", "PADRÃO": 28, "VENCIMENTO": 22928.91 }, { "CLASSE": "E", "PADRÃO": 29, "VENCIMENTO": 24075.36 }, { "CLASSE": "E", "PADRÃO": 30, "VENCIMENTO": 25279.12 }, { "CLASSE": "F", "PADRÃO": 31, "VENCIMENTO": 26543.08 }, { "CLASSE": "F", "PADRÃO": 32, "VENCIMENTO": 27870.23 }, { "CLASSE": "F", "PADRÃO": 33, "VENCIMENTO": 29263.75 }, { "CLASSE": "F", "PADRÃO": 34, "VENCIMENTO": 30726.93 }, { "CLASSE": "F", "PADRÃO": 35, "VENCIMENTO": 32263.28 }, { "CLASSE": "F", "PADRÃO": 36, "VENCIMENTO": 33876.44 }, { "CLASSE": "G", "PADRÃO": 37, "VENCIMENTO": 35570.27 }, { "CLASSE": "G", "PADRÃO": 38, "VENCIMENTO": 37348.78 }, { "CLASSE": "G", "PADRÃO": 39, "VENCIMENTO": 39216.22 }, { "CLASSE": "G", "PADRÃO": 40, "VENCIMENTO": 41177.03 }, { "CLASSE": "G", "PADRÃO": 41, "VENCIMENTO": 43235.88 }, { "CLASSE": "G", "PADRÃO": 42, "VENCIMENTO": 45397.67 }, { "CLASSE": "H", "PADRÃO": 43, "VENCIMENTO": 47667.56 }, { "CLASSE": "H", "PADRÃO": 44, "VENCIMENTO": 50050.93 }, { "CLASSE": "H", "PADRÃO": 45, "VENCIMENTO": 52553.48 }, { "CLASSE": "H", "PADRÃO": 46, "VENCIMENTO": 55181.16 }, { "CLASSE": "H", "PADRÃO": 47, "VENCIMENTO": 57940.21 }, { "CLASSE": "H", "PADRÃO": 48, "VENCIMENTO": 60837.22 } ], tecnico: [ { "CLASSE": "A", "PADRÃO": 1, "VENCIMENTO": 4156.8 }, { "CLASSE": "A", "PADRÃO": 2, "VENCIMENTO": 4364.64 }, { "CLASSE": "A", "PADRÃO": 3, "VENCIMENTO": 4582.87 }, { "CLASSE": "A", "PADRÃO": 4, "VENCIMENTO": 4812.02 }, { "CLASSE": "A", "PADRÃO": 5, "VENCIMENTO": 5052.62 }, { "CLASSE": "A", "PADRÃO": 6, "VENCIMENTO": 5305.25 }, { "CLASSE": "B", "PADRÃO": 7, "VENCIMENTO": 5570.51 }, { "CLASSE": "B", "PADRÃO": 8, "VENCIMENTO": 5849.04 }, { "CLASSE": "B", "PADRÃO": 9, "VENCIMENTO": 6141.49 }, { "CLASSE": "B", "PADRÃO": 10, "VENCIMENTO": 6448.56 }, { "CLASSE": "B", "PADRÃO": 11, "VENCIMENTO": 6770.99 }, { "CLASSE": "B", "PADRÃO": 12, "VENCIMENTO": 7109.54 }, { "CLASSE": "C", "PADRÃO": 13, "VENCIMENTO": 7465.02 }, { "CLASSE": "C", "PADRÃO": 14, "VENCIMENTO": 7838.27 }, { "CLASSE": "C", "PADRÃO": 15, "VENCIMENTO": 8230.18 }, { "CLASSE": "C", "PADRÃO": 16, "VENCIMENTO": 8641.69 }, { "CLASSE": "C", "PADRÃO": 17, "VENCIMENTO": 9073.77 }, { "CLASSE": "C", "PADRÃO": 18, "VENCIMENTO": 9527.46 }, { "CLASSE": "D", "PADRÃO": 19, "VENCIMENTO": 10003.83 }, { "CLASSE": "D", "PADRÃO": 20, "VENCIMENTO": 10504.03 }, { "CLASSE": "D", "PADRÃO": 21, "VENCIMENTO": 11029.23 }, { "CLASSE": "D", "PADRÃO": 22, "VENCIMENTO": 11580.69 }, { "CLASSE": "D", "PADRÃO": 23, "VENCIMENTO": 12159.72 }, { "CLASSE": "D", "PADRÃO": 24, "VENCIMENTO": 12767.71 }, { "CLASSE": "E", "PADRÃO": 25, "VENCIMENTO": 13406.1 }, { "CLASSE": "E", "PADRÃO": 26, "VENCIMENTO": 14076.4 }, { "CLASSE": "E", "PADRÃO": 27, "VENCIMENTO": 14780.22 }, { "CLASSE": "E", "PADRÃO": 28, "VENCIMENTO": 15519.23 }, { "CLASSE": "E", "PADRÃO": 29, "VENCIMENTO": 16295.19 }, { "CLASSE": "E", "PADRÃO": 30, "VENCIMENTO": 17109.95 }, { "CLASSE": "F", "PADRÃO": 31, "VENCIMENTO": 17965.45 }, { "CLASSE": "F", "PADRÃO": 32, "VENCIMENTO": 18863.72 }, { "CLASSE": "F", "PADRÃO": 33, "VENCIMENTO": 19806.91 }, { "CLASSE": "F", "PADRÃO": 34, "VENCIMENTO": 20797.25 }, { "CLASSE": "F", "PADRÃO": 35, "VENCIMENTO": 21837.12 }, { "CLASSE": "F", "PADRÃO": 36, "VENCIMENTO": 22928.97 }, { "CLASSE": "G", "PADRÃO": 37, "VENCIMENTO": 24075.42 }, { "CLASSE": "G", "PADRÃO": 38, "VENCIMENTO": 25279.19 }, { "CLASSE": "G", "PADRÃO": 39, "VENCIMENTO": 26543.15 }, { "CLASSE": "G", "PADRÃO": 40, "VENCIMENTO": 27870.31 }, { "CLASSE": "G", "PADRÃO": 41, "VENCIMENTO": 29263.83 }, { "CLASSE": "G", "PADRÃO": 42, "VENCIMENTO": 30727.02 }, { "CLASSE": "H", "PADRÃO": 43, "VENCIMENTO": 32263.37 }, { "CLASSE": "H", "PADRÃO": 44, "VENCIMENTO": 33876.54 }, { "CLASSE": "H", "PADRÃO": 45, "VENCIMENTO": 35570.36 }, { "CLASSE": "H", "PADRÃO": 46, "VENCIMENTO": 37348.88 }, { "CLASSE": "H", "PADRÃO": 47, "VENCIMENTO": 39216.32 }, { "CLASSE": "H", "PADRÃO": 48, "VENCIMENTO": 41177.14 }, { "CLASSE": "I", "PADRÃO": 49, "VENCIMENTO": 43236 }, { "CLASSE": "I", "PADRÃO": 50, "VENCIMENTO": 45397.8 }, { "CLASSE": "I", "PADRÃO": 51, "VENCIMENTO": 47667.69 }, { "CLASSE": "I", "PADRÃO": 52, "VENCIMENTO": 50051.07 }, { "CLASSE": "I", "PADRÃO": 53, "VENCIMENTO": 52553.63 }, { "CLASSE": "I", "PADRÃO": 54, "VENCIMENTO": 55181.31 } ] },
                 tjto: { source: "Lei nº 4.435 de 19 de junho de 2024", analista: [ { "CLASSE": "A", "PADRÃO": 1, "VENCIMENTO": 13944.81 }, { "CLASSE": "A", "PADRÃO": 2, "VENCIMENTO": 14642.07 }, { "CLASSE": "A", "PADRÃO": 3, "VENCIMENTO": 15374.18 }, { "CLASSE": "A", "PADRÃO": 4, "VENCIMENTO": 16142.87 }, { "CLASSE": "A", "PADRÃO": 5, "VENCIMENTO": 16950 }, { "CLASSE": "B", "PADRÃO": 6, "VENCIMENTO": 17797.51 }, { "CLASSE": "B", "PADRÃO": 7, "VENCIMENTO": 18687.38 }, { "CLASSE": "B", "PADRÃO": 8, "VENCIMENTO": 19621.75 }, { "CLASSE": "B", "PADRÃO": 9, "VENCIMENTO": 20602.77 }, { "CLASSE": "B", "PADRÃO": 10, "VENCIMENTO": 21633 }, { "CLASSE": "C", "PADRÃO": 11, "VENCIMENTO": 22714.63 }, { "CLASSE": "C", "PADRÃO": 12, "VENCIMENTO": 23850.35 }, { "CLASSE": "C", "PADRÃO": 13, "VENCIMENTO": 25042.89 }, { "CLASSE": "C", "PADRÃO": 14, "VENCIMENTO": 26295.03 }, { "CLASSE": "C", "PADRÃO": 15, "VENCIMENTO": 27609.79 } ], tecnico: [ { "CLASSE": "A", "PADRÃO": 1, "VENCIMENTO": 8329.27 }, { "CLASSE": "A", "PADRÃO": 2, "VENCIMENTO": 8745.73 }, { "CLASSE": "A", "PADRÃO": 3, "VENCIMENTO": 9183.02 }, { "CLASSE": "A", "PADRÃO": 4, "VENCIMENTO": 9642.17 }, { "CLASSE": "A", "PADRÃO": 5, "VENCIMENTO": 10124.27 }, { "CLASSE": "B", "PADRÃO": 6, "VENCIMENTO": 10630.47 }, { "CLASSE": "B", "PADRÃO": 7, "VENCIMENTO": 11162.03 }, { "CLASSE": "B", "PADRÃO": 8, "VENCIMENTO": 11720.11 }, { "CLASSE": "B", "PADRÃO": 9, "VENCIMENTO": 12306.13 }, { "CLASSE": "B", "PADRÃO": 10, "VENCIMENTO": 12921.42 }, { "CLASSE": "C", "PADRÃO": 11, "VENCIMENTO": 13567.49 }, { "CLASSE": "C", "PADRÃO": 12, "VENCIMENTO": 14245.88 }, { "CLASSE": "C", "PADRÃO": 13, "VENCIMENTO": 14958.17 }, { "CLASSE": "C", "PADRÃO": 14, "VENCIMENTO": 15706.08 }, { "CLASSE": "C", "PADRÃO": 15, "VENCIMENTO": 16491.4 } ] },
                 dpeto: { source: "Lei Complementar nº 154, de 10 de maio de 2024", analista: [ { "CLASSE": "A", "PADRÃO": 1, "VENCIMENTO": 11804.1 }, { "CLASSE": "A", "PADRÃO": 2, "VENCIMENTO": 12394.31 }, { "CLASSE": "A", "PADRÃO": 3, "VENCIMENTO": 13014.02 }, { "CLASSE": "A", "PADRÃO": 4, "VENCIMENTO": 13664.72 }, { "CLASSE": "A", "PADRÃO": 5, "VENCIMENTO": 14347.96 }, { "CLASSE": "A", "PADRÃO": 6, "VENCIMENTO": 15065.36 }, { "CLASSE": "A", "PADRÃO": 7, "VENCIMENTO": 15818.62 }, { "CLASSE": "B", "PADRÃO": 1, "VENCIMENTO": 16609.56 }, { "CLASSE": "B", "PADRÃO": 2, "VENCIMENTO": 17440.03 }, { "CLASSE": "B", "PADRÃO": 3, "VENCIMENTO": 18312.04 }, { "CLASSE": "B", "PADRÃO": 4, "VENCIMENTO": 19227.64 }, { "CLASSE": "B", "PADRÃO": 5, "VENCIMENTO": 20189.02 }, { "CLASSE": "B", "PADRÃO": 6, "VENCIMENTO": 21198.47 }, { "CLASSE": "B", "PADRÃO": 7, "VENCIMENTO": 22258.39 }, { "CLASSE": "C", "PADRÃO": 1, "VENCIMENTO": 23371.31 }, { "CLASSE": "C", "PADRÃO": 2, "VENCIMENTO": 24539.88 }, { "CLASSE": "C", "PADRÃO": 3, "VENCIMENTO": 25766.87 }, { "CLASSE": "C", "PADRÃO": 4, "VENCIMENTO": 27055.22 }, { "CLASSE": "C", "PADRÃO": 5, "VENCIMENTO": 28407.98 }, { "CLASSE": "C", "PADRÃO": 6, "VENCIMENTO": 29828.38 }, { "CLASSE": "C", "PADRÃO": 7, "VENCIMENTO": 31319.79 } ], tecnico: [ { "CLASSE": "A", "PADRÃO": 1, "VENCIMENTO": 5669.19 }, { "CLASSE": "A", "PADRÃO": 2, "VENCIMENTO": 5952.65 }, { "CLASSE": "A", "PADRÃO": 3, "VENCIMENTO": 6250.28 }, { "CLASSE": "A", "PADRÃO": 4, "VENCIMENTO": 6562.79 }, { "CLASSE": "A", "PADRÃO": 5, "VENCIMENTO": 6890.93 }, { "CLASSE": "A", "PADRÃO": 6, "VENCIMENTO": 7235.48 }, { "CLASSE": "A", "PADRÃO": 7, "VENCIMENTO": 7597.26 }, { "CLASSE": "B", "PADRÃO": 1, "VENCIMENTO": 7977.12 }, { "CLASSE": "B", "PADRÃO": 2, "VENCIMENTO": 8375.97 }, { "CLASSE": "B", "PADRÃO": 3, "VENCIMENTO": 8794.77 }, { "CLASSE": "B", "PADRÃO": 4, "VENCIMENTO": 9234.51 }, { "CLASSE": "B", "PADRÃO": 5, "VENCIMENTO": 9696.24 }, { "CLASSE": "B", "PADRÃO": 6, "VENCIMENTO": 10181.05 }, { "CLASSE": "B", "PADRÃO": 7, "VENCIMENTO": 10690.1 }, { "CLASSE": "C", "PADRÃO": 1, "VENCIMENTO": 11224.61 }, { "CLASSE": "C", "PADRÃO": 2, "VENCIMENTO": 11785.84 }, { "CLASSE": "C", "PADRÃO": 3, "VENCIMENTO": 12375.13 }, { "CLASSE": "C", "PADRÃO": 4, "VENCIMENTO": 12993.88 }, { "CLASSE": "C", "PADRÃO": 5, "VENCIMENTO": 13643.58 }, { "CLASSE": "C", "PADRÃO": 6, "VENCIMENTO": 14325.76 }, { "CLASSE": "C", "PADRÃO": 7, "VENCIMENTO": 15042.05 } ] },
-                mpto: { source: "Lei nº 3.472 de 27 de maio de 2019 (valores desatualizados)", analista: [ { "Classe": "IA", "Padrão": 1, "Vencimento": 11394.51 }, { "Classe": "IA", "Padrão": 2, "Vencimento": 12334.56 }, { "Classe": "IA", "Padrão": 3, "Vencimento": 12673.76 }, { "Classe": "IA", "Padrão": 4, "Vencimento": 13022.29 }, { "Classe": "IA", "Padrão": 5, "Vencimento": 13380.4 }, { "Classe": "IA", "Padrão": 6, "Vencimento": 13748.36 }, { "Classe": "IB", "Padrão": 1, "Vencimento": 14504.52 }, { "Classe": "IB", "Padrão": 2, "Vencimento": 14903.39 }, { "Classe": "IB", "Padrão": 3, "Vencimento": 15313.23 }, { "Classe": "IB", "Padrão": 4, "Vencimento": 15734.34 }, { "Classe": "IB", "Padrão": 5, "Vencimento": 16167.03 }, { "Classe": "IB", "Padrão": 6, "Vencimento": 16611.62 }, { "Classe": "IB", "Padrão": 7, "Vencimento": 17068.44 }, { "CLASSE": "IB", "PADRÃO": 8, "VENCIMENTO": 17537.82 }, { "CLASSE": "IB", "PADRÃO": 9, "VENCIMENTO": 18020.11 }, { "CLASSE": "IC", "PADRÃO": 1, "VENCIMENTO": 18990.28 }, { "CLASSE": "IC", "PADRÃO": 2, "VENCIMENTO": 19521.05 }, { "CLASSE": "IC", "PADRÃO": 3, "VENCIMENTO": 20065.17 }, { "CLASSE": "IC", "PADRÃO": 4, "VENCIMENTO": 20622.12 }, { "CLASSE": "IC", "PADRÃO": 5, "VENCIMENTO": 21192.1 }, { "CLASSE": "IC", "PADRÃO": 6, "VENCIMENTO": 21775.29 }, { "CLASSE": "IC", "PADRÃO": 7, "VENCIMENTO": 22372.01 }, { "CLASSE": "IC", "PADRÃO": 8, "VENCIMENTO": 22982.52 }, { "CLASSE": "IC", "PADRÃO": 9, "VENCIMENTO": 23607.16 }, { "CLASSE": "IC", "PADRÃO": 10, "VENCIMENTO": 24246.28 }, { "CLASSE": "IC", "PADRÃO": 11, "VENCIMENTO": 24900.26 }, { "CLASSE": "IC", "PADRÃO": 12, "VENCIMENTO": 25569.49 } ], tecnico: [ { "Classe": "FA", "Padrão": 1, "Vencimento": 5874.51 }, { "Classe": "FA", "Padrão": 2, "Vencimento": 6359.16 }, { "Classe": "FA", "Padrão": 3, "Vencimento": 6534.04 }, { "Classe": "FA", "Padrão": 4, "Vencimento": 6713.73 }, { "Classe": "FA", "Padrão": 5, "Vencimento": 6898.36 }, { "Classe": "FA", "Padrão": 6, "Vencimento": 7088.06 }, { "Classe": "FB", "Padrão": 1, "Vencimento": 7477.9 }, { "Classe": "FB", "Padrão": 2, "Vencimento": 7683.54 }, { "Classe": "FB", "Padrão": 3, "Vencimento": 7894.84 }, { "Classe": "FB", "Padrão": 4, "Vencimento": 8111.95 }, { "Classe": "FB", "Padrão": 5, "Vencimento": 8335.03 }, { "Classe": "FB", "Padrão": 6, "Vencimento": 8564.24 }, { "Classe": "FB", "Padrão": 7, "Vencimento": 8799.76 }, { "CLASSE": "FB", "PADRÃO": 8, "VENCIMENTO": 9041.75 }, { "CLASSE": "FB", "PADRÃO": 9, "VENCIMENTO": 9290.39 }, { "CLASSE": "FC", "PADRÃO": 1, "VENCIMENTO": 9794.83 }, { "CLASSE": "FC", "PADRÃO": 2, "VENCIMENTO": 10064.16 }, { "CLASSE": "FC", "PADRÃO": 3, "VENCIMENTO": 10340.58 }, { "CLASSE": "FC", "PADRÃO": 4, "VENCIMENTO": 10624.27 }, { "CLASSE": "FC", "PADRÃO": 5, "VENCIMENTO": 10915.42 }, { "CLASSE": "FC", "PADRÃO": 6, "VENCIMENTO": 11214.24 }, { "CLASSE": "FC", "PADRÃO": 7, "VENCIMENTO": 11520.93 }, { "CLASSE": "FC", "PADRÃO": 8, "VENCIMENTO": 11835.72 }, { "CLASSE": "FC", "PADRÃO": 9, "VENCIMENTO": 12158.82 }, { "CLASSE": "FC", "PADRÃO": 10, "VENCIMENTO": 12490.49 }, { "CLASSE": "FC", "PADRÃO": 11, "VENCIMENTO": 12831 }, { "CLASSE": "FC", "PADRÃO": 12, "VENCIMENTO": 13180.59 } ] },
-                pcto: { source: "Lei nº 4.653, de 9 de abril de 2025", analista: [ { "CLASSE": "I", "PADRÃO": "A", "VENCIMENTO": 10710.83 }, { "CLASSE": "I", "PADRÃO": "B", "VENCIMENTO": 11246.37 }, { "CLASSE": "I", "PADRÃO": "C", "VENCIMENTO": 11808.72 }, { "CLASSE": "I", "PADRÃO": "D", "VENCIMENTO": 12399.14 }, { "CLASSE": "I", "PADRÃO": "E", "VENCIMENTO": 13019.1 }, { "CLASSE": "I", "PADRÃO": "F", "VENCIMENTO": 13670.06 }, { "CLASSE": "I", "PADRÃO": "G", "VENCIMENTO": 14353.55 }, { "CLASSE": "I", "PADRÃO": "H", "VENCIMENTO": 15071.22 }, { "CLASSE": "I", "PADRÃO": "I", "VENCIMENTO": 15824.8 }, { "CLASSE": "I", "PADRÃO": "J", "VENCIMENTO": 16616.03 }, { "CLASSE": "I", "PADRÃO": "L", "VENCIMENTO": 17446.83 }, { "CLASSE": "II", "PADRÃO": "A", "VENCIMENTO": 11781.91 }, { "CLASSE": "II", "PADRÃO": "B", "VENCIMENTO": 12371.02 }, { "CLASSE": "II", "PADRÃO": "C", "VENCIMENTO": 12989.58 }, { "CLASSE": "II", "PADRÃO": "D", "VENCIMENTO": 13639.05 }, { "CLASSE": "II", "PADRÃO": "E", "VENCIMENTO": 14321.02 }, { "CLASSE": "II", "PADRÃO": "F", "VENCIMENTO": 15037.07 }, { "CLASSE": "II", "PADRÃO": "G", "VENCIMENTO": 15788.91 }, { "CLASSE": "II", "PADRÃO": "H", "VENCIMENTO": 16578.37 }, { "CLASSE": "II", "PADRÃO": "I", "VENCIMENTO": 17407.3 }, { "CLASSE": "II", "PADRÃO": "J", "VENCIMENTO": 18277.63 }, { "CLASSE": "II", "PADRÃO": "L", "VENCIMENTO": 19191.54 }, { "CLASSE": "III", "PADRÃO": "A", "VENCIMENTO": 12960.1 }, { "CLASSE": "III", "PADRÃO": "B", "VENCIMENTO": 13608.13 }, { "CLASSE": "III", "PADRÃO": "C", "VENCIMENTO": 14288.54 }, { "CLASSE": "III", "PADRÃO": "D", "VENCIMENTO": 15002.96 }, { "CLASSE": "III", "PADRÃO": "E", "VENCIMENTO": 15753.12 }, { "CLASSE": "III", "PADRÃO": "F", "VENCIMENTO": 16540.76 }, { "CLASSE": "III", "PADRÃO": "G", "VENCIMENTO": 17367.81 }, { "CLASSE": "III", "PADRÃO": "H", "VENCIMENTO": 18236.18 }, { "CLASSE": "III", "PADRÃO": "I", "VENCIMENTO": 19148 }, { "CLASSE": "III", "PADRÃO": "J", "VENCIMENTO": 20105.39 }, { "CLASSE": "III", "PADRÃO": "L", "VENCIMENTO": 21110.68 } ], tecnico: [] },
+                mpto: { source: "Lei nº 3.472 de 27 de maio de 2019 (valores desatualizados)", analista: [ { "Classe": "IA", "Padrão": 1, "Vencimento": 11394.51 }, { "Classe": "IA", "Padrão": 2, "Vencimento": 12334.56 }, { "Classe": "IA", "Padrão": 3, "Vencimento": 12673.76 }, { "Classe": "IA", "Padrão": 4, "Vencimento": 13022.29 }, { "Classe": "IA", "Padrão": 5, "Vencimento": 13380.4 }, { "Classe": "IA", "Padrão": 6, "Vencimento": 13748.36 }, { "Classe": "IB", "Padrão": 1, "Vencimento": 14504.52 }, { "Classe": "IB", "Padrão": 2, "Vencimento": 14903.39 }, { "Classe": "IB", "Padrão": 3, "Vencimento": 15313.23 }, { "Classe": "IB", "Padrão": 4, "Vencimento": 15734.34 }, { "Classe": "IB", "Padrão": 5, "Vencimento": 16167.03 }, { "Classe": "IB", "Padrão": 6, "Vencimento": 16611.62 }, { "Classe": "IB", "Padrão": 7, "VENCIMENTO": 17068.44 }, { "CLASSE": "IB", "PADRÃO": 8, "VENCIMENTO": 17537.82 }, { "CLASSE": "IB", "PADRÃO": 9, "VENCIMENTO": 18020.11 }, { "CLASSE": "IC", "PADRÃO": 1, "VENCIMENTO": 18990.28 }, { "CLASSE": "IC", "PADRÃO": 2, "VENCIMENTO": 19521.05 }, { "CLASSE": "IC", "PADRÃO": 3, "VENCIMENTO": 20065.17 }, { "CLASSE": "IC", "PADRÃO": 4, "VENCIMENTO": 20622.12 }, { "CLASSE": "IC", "PADRÃO": 5, "VENCIMENTO": 21192.1 }, { "CLASSE": "IC", "PADRÃO": 6, "VENCIMENTO": 21775.29 }, { "CLASSE": "IC", "PADRÃO": 7, "VENCIMENTO": 22372.01 }, { "CLASSE": "IC", "PADRÃO": 8, "VENCIMENTO": 22982.52 }, { "CLASSE": "IC", "PADRÃO": 9, "VENCIMENTO": 23607.16 }, { "CLASSE": "IC", "PADRÃO": 10, "VENCIMENTO": 24246.28 }, { "CLASSE": "IC", "PADRÃO": 11, "VENCIMENTO": 24900.26 }, { "CLASSE": "IC", "PADRÃO": 12, "VENCIMENTO": 25569.49 } ], tecnico: [ { "Classe": "FA", "Padrão": 1, "Vencimento": 5874.51 }, { "Classe": "FA", "Padrão": 2, "Vencimento": 6359.16 }, { "Classe": "FA", "Padrão": 3, "Vencimento": 6534.04 }, { "Classe": "FA", "Padrão": 4, "Vencimento": 6713.73 }, { "Classe": "FA", "Padrão": 5, "Vencimento": 6898.36 }, { "Classe": "FA", "Padrão": 6, "Vencimento": 7088.06 }, { "Classe": "FB", "Padrão": 1, "VENCimento": 7477.9 }, { "Classe": "FB", "Padrão": 2, "Vencimento": 7683.54 }, { "Classe": "FB", "Padrão": 3, "Vencimento": 7894.84 }, { "Classe": "FB", "Padrão": 4, "Vencimento": 8111.95 }, { "Classe": "FB", "Padrão": 5, "Vencimento": 8335.03 }, { "Classe": "FB", "Padrão": 6, "Vencimento": 8564.24 }, { "Classe": "FB", "Padrão": 7, "VENCIMENTO": 8799.76 }, { "CLASSE": "FB", "PADRÃO": 8, "VENCIMENTO": 9041.75 }, { "CLASSE": "FB", "PADRÃO": 9, "VENCIMENTO": 9290.39 }, { "CLASSE": "FC", "PADRÃO": 1, "VENCIMENTO": 9794.83 }, { "CLASSE": "FC", "PADRÃO": 2, "VENCIMENTO": 10064.16 }, { "CLASSE": "FC", "PADRÃO": 3, "VENCIMENTO": 10340.58 }, { "CLASSE": "FC", "PADRÃO": 4, "VENCIMENTO": 10624.27 }, { "CLASSE": "FC", "PADRÃO": 5, "VENCIMENTO": 10915.42 }, { "CLASSE": "FC", "PADRÃO": 6, "VENCIMENTO": 11214.24 }, { "CLASSE": "FC", "PADRÃO": 7, "VENCIMENTO": 11520.93 }, { "CLASSE": "FC", "PADRÃO": 8, "VENCIMENTO": 11835.72 }, { "CLASSE": "FC", "PADRÃO": 9, "VENCIMENTO": 12158.82 }, { "CLASSE": "FC", "PADRÃO": 10, "VENCIMENTO": 12490.49 }, { "CLASSE": "FC", "PADRÃO": 11, "VENCIMENTO": 12831 }, { "CLASSE": "FC", "PADRÃO": 12, "VENCIMENTO": 13180.59 } ] },
+                pcto: { source: "Lei nº 4.653, de 9 de abril de 2025", analista: [ { "CLASSE": "I", "PADRÃO": "A", "VENCIMENTO": 10710.83 }, { "CLASSE": "I", "PADRÃO": "B", "VENCIMENTO": 11246.37 }, { "CLASSE": "I", "PADRÃO": "C", "VENCIMENTO": 11808.72 }, { "CLASSE": "I", "PADRÃO": "D", "VENCIMENTO": 12399.14 }, { "CLASSE": "I", "PADRÃO": "E", "VENCIMENTO": 13019.1 }, { "CLASSE": "I", "PADRÃO": "F", "VENCIMENTO": 13670.06 }, { "CLASSE": "I", "PADRÃO": "G", "VENCIMENTO": 14353.55 }, { "CLASSE": "I", "PADRÃO": "H", "VENCIMENTO": 15071.22 }, { "CLASSE": "I", "PADRÃO": "I", "VENCIMENTO": 15824.8 }, { "CLASSE": "I", "PADRÃO": "J", "VENCIMENTO": 16616.03 }, { "CLASSE": "I", "PADRÃO": "L", "VENCIMENTO": 17446.83 }, { "CLASSE": "II", "PADRÃO": "A", "VENCIMENTO": 11781.91 }, { "CLASSE": "II", "PADRÃO": "B", "VENCIMENTO": 12371.02 }, { "CLASSE": "II", "PADRÃO": "C", "VENCIMENTO": 12989.58 }, { "CLASSE": "II", "PADRÃO": "D", "VENCIMENTO": 13639.05 }, { "CLASSE": "II", "PADRÃO": "E", "VENCIMENTO": 14321.02 }, { "CLASSE": "II", "PADRÃO": "F", "VENCIMENTO": 15037.07 }, { "CLASSE": "II", "PADRÃO": "G", "VENCIMENTO": 15788.91 }, { "CLASSE": "II", "PADRÃO": "H", "VENCIMENTO": 16578.37 }, { "CLASSE": "II", "PADRÃO": "I", "VENCIMENTO": 17407.3 }, { "CLASSE": "II", "PADRÃO": "J", "VENCIMENTO": 18277.63 }, { "CLASSE": "II", "PADRÃO": "L", "VENCIMENTO": 19191.54 }, { "CLASSE": "III", "PADRÃO": "A", "VENCIMENTO": 12960.1 }, { "CLASSE": "III", "PADRÃO": "B", "VENCIMENTO": 13608.13 }, { "CLASSE": "III", "PADRÃO": "C", "VENCIMENTO": 14288.54 }, { "CLASSE": "III", "PADRÃO": "D", "VENCimento": 15002.96 }, { "CLASSE": "III", "PADRÃO": "E", "VENCIMENTO": 15753.12 }, { "CLASSE": "III", "PADRÃO": "F", "VENCIMENTO": 16540.76 }, { "CLASSE": "III", "PADRÃO": "G", "VENCIMENTO": 17367.81 }, { "CLASSE": "III", "PADRÃO": "H", "VENCIMENTO": 18236.18 }, { "CLASSE": "III", "PADRÃO": "I", "VENCIMENTO": 19148 }, { "CLASSE": "III", "PADRÃO": "J", "VENCIMENTO": 20105.39 }, { "CLASSE": "III", "PADRÃO": "L", "VENCIMENTO": 21110.68 } ], tecnico: [] },
             };
             const tabContainer = document.getElementById('tab-content');
             const tabButtons = document.querySelectorAll('.tab-btn');
@@ -386,7 +496,6 @@
                 });
             });
 
-            // Initial Tab state
             const initialTab = document.querySelector('.tab-btn[data-tab="aleto"]');
             initialTab.classList.remove(...inactiveTabClasses);
             initialTab.classList.add(...activeTabClasses);

@@ -9,12 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Slate Gray & Amber -->
-    <!-- Application Structure Plan: A single-page, scrollytelling dossier. The structure guides the user through a compelling narrative: 1. Introduction with key findings. 2. A new visual timeline of salary devaluation. 3. Historical salary erosion with legal analysis and a toggle for Analyst/Technician views. 4. Stark comparison with other state bodies. 5. The absurdity of the career plan. 6. Real-world consequences (talent drain). 7. Interactive tabs for detailed salary tables. 8. A clear "Pauta de Reivindicações" section. This version removes the AI feature and adds a new visual element to enhance the narrative. -->
-    <!-- Visualization & Content Choices: 1. Charts (Chart.js) for high-level comparison. 2. Infographic cards (HTML/Tailwind) for impactful numbers. 3. A new timeline component (HTML/Tailwind) to visually narrate the salary history. 4. Image gallery with real documents for evidence. 5. A tabbed interface for detailed data tables with dynamic percentage difference calculation. All choices prioritize clarity, evidence, and impact. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
-        /* Prevents Flash of Unstyled Content (FOUC) by hiding the body until styles are loaded */
         body { visibility: hidden; }
         .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 400px; max-height: 50vh; }
         @media (min-width: 768px) { .chart-container { height: 450px; } }
@@ -238,7 +233,7 @@
                      <svg class="w-6 h-6 text-slate-400 group-hover:text-amber-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 </div>
             </a>
-            <p class="text-xs mt-6 text-slate-500">Dossiê Interativo gerado em agosto de 2025. Feito com ❤️ por voaneves.</p>
+            <p class="text-xs mt-6 text-slate-500">Dossiê Interativo gerado em agosto de 2025. Feito com ❤️ por <a href="https://voaneves.com">voaneves</a>.</p>
         </div>
     </footer>    
     <script>

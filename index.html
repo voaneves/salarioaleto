@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dossiê Interativo: Análise da Remuneração na ALETO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Slate Gray & Amber -->
+    <!-- Application Structure Plan: A single-page, scrollytelling dossier. The structure guides the user through a compelling narrative: 1. Introduction with key findings. 2. Historical salary erosion with legal analysis and a new toggle for Analyst/Technician views. 3. Stark comparison with other state bodies, including legal context on isonomy. 4. The absurdity of the career plan. 5. Real-world consequences (talent drain) with corrected document images. 6. A new section with interactive tabs for detailed salary tables from all relevant bodies, with sources and a new inline percentage comparison feature. 7. A clear "Pauta de Reivindicações" section with the integrated Gemini API feature. This structure is designed to be a comprehensive, self-contained evidence package, fulfilling all user requests for data accuracy, sources, and actionable recommendations. -->
+    <!-- Visualization & Content Choices: 1. Charts (Chart.js) for high-level comparison, using updated data and new interactivity. 2. Infographic cards (HTML/Tailwind) for impactful numbers. 3. Image gallery with real documents for evidence. 4. A tabbed interface for detailed data tables (HTML/CSS/JS), now with dynamic percentage difference calculation and display. 5. Gemini Integration for actionability on the final recommendations. All choices prioritize clarity, evidence, and impact. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 400px; max-height: 50vh; }
+        @media (min-width: 768px) { .chart-container { height: 450px; } }
+        .stat-card { background-color: white; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .nav-link { transition: color 0.3s; }
+        .nav-link:hover { color: #f59e0b; }
+        .active-btn { background-color: #1e293b; color: white; }
+        .inactive-btn { background-color: #e2e8f0; color: #334155; }
+        .modal-backdrop { transition: opacity 0.3s ease-in-out; }
+        .modal-content { transition: transform 0.3s ease-in-out; }
+        .gemini-btn { background-color: #f59e0b; color: #1e293b; transition: background-color 0.3s, transform 0.2s; }
+        .gemini-btn:hover { background-color: #d97706; transform: translateY(-2px); }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #f59e0b; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .tab-btn { transition: all 0.3s; }
+        .tab-btn.active { border-color: #f59e0b; color: #1e293b; background-color: white; }
+        .tab-btn:not(.active) { border-color: transparent; }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-40 border-b border-slate-200">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-slate-800">Dossiê Remuneratório ALETO</h1>
+            <div class="hidden md:flex space-x-6 text-sm font-medium">
+                <a href="#perda-salarial" class="nav-link">Perda Real</a>
+                <a href="#comparativo" class="nav-link">Disparidade</a>
+                <a href="#carreira" class="nav-link">Carreira</a>
+                <a href="#evasao" class="nav-link">Evasão</a>
+                <a href="#tabelas" class="nav-link">Tabelas</a>
+                <a href="#reivindicacoes" class="nav-link">✨ Reivindicações</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-12">
+
+        <section id="inicio" class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-4">Um Retrato da Desvalorização do Servidor Legislativo</h2>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600 mb-10">
+               A Lei nº 4.662/2025 instituiu uma nova estrutura remuneratória que, em vez de valorizar, representa um retrocesso histórico para os cargos da ALETO. Este dossiê interativo detalha a perda do poder de compra, a disparidade com outros órgãos, a inviabilidade da carreira e a consequente evasão de talentos, fornecendo uma base sólida para a busca de uma reestruturação justa e necessária.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <div class="stat-card"><span class="text-4xl font-bold text-amber-600">-45,9%</span><p class="mt-2 text-sm font-medium">Perda real do poder de compra do salário de Técnico desde 2019.</p></div>
+                <div class="stat-card"><span class="text-4xl font-bold text-amber-600">+94,6%</span><p class="mt-2 text-sm font-medium">É a diferença do vencimento inicial de Analista do TJTO em relação à ALETO.</p></div>
+                <div class="stat-card"><span class="text-4xl font-bold text-amber-600">106 Anos</span><p class="mt-2 text-sm font-medium">Tempo necessário para um Técnico Legislativo atingir o topo da carreira.</p></div>
+            </div>
+        </section>
+
+        <section id="perda-salarial" class="py-16 bg-white rounded-2xl shadow-sm border border-slate-200 mb-16">
+            <div class="text-center mb-12 px-6">
+                <h3 class="text-3xl font-bold text-slate-800 mb-3">A Redução do Vencimento Real</h3>
+                <p class="max-w-3xl mx-auto text-slate-600">
+                    A comparação do vencimento atual com o valor histórico de 2019, corrigido pela inflação, não revela estagnação, mas um retrocesso explícito. A perda de poder de compra para ambos os cargos supera 40%, um fato que desvaloriza o cargo e a instituição.
+                </p>
+                 <div class="mt-8 flex justify-center space-x-4">
+                    <button id="btnAnalistaPerda" class="px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200 active-btn">Analista</button>
+                    <button id="btnTecnicoPerda" class="px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200 inactive-btn">Técnico/Policial</button>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="perdaSalarialChart"></canvas>
+            </div>
+            <div class="max-w-3xl mx-auto mt-12 px-6 text-slate-600 text-justify text-sm space-y-4">
+                <h4 class="font-bold text-slate-800 text-lg text-center">Análise Jurídica: Vedação ao Retrocesso e Valor do Cargo Público</h4>
+                <p>Embora o princípio da irredutibilidade nominal de vencimentos (Art. 37, XV, CF) proteja quem já está no cargo, a questão aqui é mais ampla. A drástica redução do valor real do cargo para novos entrantes representa uma afronta aos princípios da razoabilidade e da moralidade administrativa. A "irredutibilidade" que se defende é a do valor e da atratividade do cargo público, pilar para um serviço de excelência. Ao legislar sobre sua própria estrutura, a ALETO promove um retrocesso na sua política de pessoal, o que pode e deve ser argumentado como uma contrariedade à busca pela eficiência, também inscrita no Art. 37 da Constituição.</p>
+            </div>
+        </section>
+
+        <section id="comparativo" class="py-16 mb-16">
+            <div class="text-center mb-12 px-6">
+                <h3 class="text-3xl font-bold text-slate-800 mb-3">Disparidade Salarial: A ALETO no Cenário Estadual</h3>
+                <p class="max-w-3xl mx-auto text-slate-600">
+                    A comparação com outros órgãos do Tocantins revela uma defasagem alarmante. A ALETO oferece a menor remuneração inicial, ferindo o espírito do princípio da isonomia e colocando-a em desvantagem na competição por profissionais qualificados.
+                </p>
+                <div class="mt-8 flex justify-center space-x-4">
+                    <button id="btnNivelSuperior" class="px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200 active-btn">Nível Superior</button>
+                    <button id="btnNivelMedio" class="px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200 inactive-btn">Nível Médio</button>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 pt-8 pb-4">
+                <div class="chart-container">
+                    <canvas id="comparativoSalarialChart"></canvas>
+                </div>
+            </div>
+             <div class="max-w-3xl mx-auto mt-12 px-6 text-slate-600 text-justify text-sm space-y-4">
+                <h4 class="font-bold text-slate-800 text-lg text-center">Análise Jurídica: O Princípio da Isonomia</h4>
+                <p>O princípio da isonomia (Art. 39, § 1º, CF) estabelece um norte para o equilíbrio entre os Poderes. Embora a Súmula Vinculante 37 do STF vede que o Judiciário imponha aumentos com base na isonomia, ela não anula o princípio. Pelo contrário, reforça que a responsabilidade de corrigir distorções é do próprio legislador. A luta pela isonomia na ALETO é uma demanda por uma decisão legislativa consciente, que reconheça que um Legislativo com corpo técnico mal remunerado tem sua capacidade de fiscalizar os demais Poderes — mais bem pagos e mais atraentes para talentos — severamente diminuída.</p>
+            </div>
+        </section>
+
+        <section id="carreira" class="py-16 bg-slate-800 text-white rounded-2xl mb-16">
+            <div class="text-center mb-12 px-6">
+                <h3 class="text-3xl font-bold mb-3">Uma Carreira Inatingível: A Ficção Jurídica</h3>
+                <p class="max-w-3xl mx-auto text-slate-300">
+                    O plano de carreira da ALETO não é um caminho de desenvolvimento, mas um labirinto sem saída. O tempo necessário para atingir o topo ultrapassa a expectativa de uma vida de trabalho, tornando a progressão uma promessa vazia e violando o princípio da eficiência.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto px-6">
+                <div class="bg-slate-700/50 p-8 rounded-xl border border-slate-600 text-center">
+                    <h4 class="text-xl font-bold text-amber-400 mb-2">Analista Legislativo</h4>
+                    <p class="text-6xl font-extrabold mb-4">94</p>
+                    <p class="font-medium">anos para chegar ao topo.</p>
+                </div>
+                <div class="bg-slate-700/50 p-8 rounded-xl border border-slate-600 text-center">
+                    <h4 class="text-xl font-bold text-amber-400 mb-2">Técnico / Policial Legislativo</h4>
+                    <p class="text-6xl font-extrabold mb-4">106</p>
+                    <p class="font-medium">anos para chegar ao topo.</p>
+                </div>
+            </div>
+            <div class="max-w-3xl mx-auto mt-12 px-6 text-slate-300 text-justify text-sm space-y-4">
+                <p>É evidente que nenhum servidor, mesmo que ingresse na carreira aos 20 anos de idade, conseguirá alcançar o último padrão, pois será compulsoriamente aposentado décadas antes. Um plano de carreira que não pode ser percorrido não motiva, não retém talentos e não incentiva a qualificação. Ele se torna um instrumento meramente simbólico, onde o vencimento final divulgado é uma referência inatingível.</p>
+            </div>
+        </section>
+
+        <section id="evasao" class="py-16 mb-16">
+            <div class="text-center mb-12 px-6">
+                <h3 class="text-3xl font-bold text-slate-800 mb-3">Consequência Real: A Evasão de Talentos</h3>
+                <p class="max-w-3xl mx-auto text-slate-600">
+                    A inadequação salarial não é um problema teórico. Conforme publicações no Diário Oficial, um número expressivo de aprovados no último concurso já desistiu da nomeação ou pediu reclassificação para o final da fila, um sintoma claro da falta de atratividade da carreira.
+                </p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <a href="https://i.ibb.co/L5t6v1d/IMG-20250805-WA0020.jpg" target="_blank"><img src="https://i.ibb.co/L5t6v1d/IMG-20250805-WA0020.jpg" alt="Exoneração a pedido, publicado no diário" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+                <a href="https://i.ibb.co/mHq36b7/IMG-20250805-WA0021.jpg" target="_blank"><img src="https://i.ibb.co/mHq36b7/IMG-20250805-WA0021.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+                <a href="https://i.ibb.co/gZ7KqN7/IMG-20250805-WA0022.jpg" target="_blank"><img src="https://i.ibb.co/gZ7KqN7/IMG-20250805-WA0022.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+                <a href="https://i.ibb.co/Kz2SjN2/IMG-20250805-WA0023.jpg" target="_blank"><img src="https://i.ibb.co/Kz2SjN2/IMG-20250805-WA0023.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+                <a href="https://i.ibb.co/JqKxZ0x/IMG-20250805-WA0024.jpg" target="_blank"><img src="https://i.ibb.co/JqKxZ0x/IMG-20250805-WA0024.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+                <a href="https://i.ibb.co/YyW8sM9/IMG-20250805-WA0025.jpg" target="_blank"><img src="https://i.ibb.co/YyW8sM9/IMG-20250805-WA0025.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+                <a href="https://i.ibb.co/L8v8zG4/IMG-20250805-WA0026.jpg" target="_blank"><img src="https://i.ibb.co/L8v8zG4/IMG-20250805-WA0026.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+                <a href="https://i.ibb.co/yV7fW9C/Imagem-do-Whats-App-de-2025-08-05-s-14-33-45-c5c5b1c9.jpg" target="_blank"><img src="https://i.ibb.co/yV7fW9C/Imagem-do-Whats-App-de-2025-08-05-s-14-33-45-c5c5b1c9.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+            </div>
+        </section>
+
+        <section id="tabelas" class="py-16 bg-white rounded-2xl shadow-sm border border-slate-200 mb-16">
+            <div class="text-center mb-12 px-6">
+                <h3 class="text-3xl font-bold text-slate-800 mb-3">Anexos: Tabelas de Vencimentos</h3>
+                <p class="max-w-3xl mx-auto text-slate-600">Navegue pelas abas para comparar as estruturas de carreira completas entre a ALETO e outros órgãos do Estado do Tocantins.</p>
+            </div>
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="mb-4 border-b border-slate-200">
+                    <nav class="-mb-px flex space-x-4 overflow-x-auto" aria-label="Tabs">
+                        <button class="tab-btn whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 active" data-tab="aleto">ALETO</button>
+                        <button class="tab-btn whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700" data-tab="tjto">TJTO</button>
+                        <button class="tab-btn whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700" data-tab="dpeto">DPETO</button>
+                        <button class="tab-btn whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700" data-tab="mpto">MPTO</button>
+                        <button class="tab-btn whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700" data-tab="pcto">PCTO</button>
+                        <button class="tab-btn whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700" data-tab="sefazto">SEFAZ-TO</button>
+                    </nav>
+                </div>
+                <div id="tab-content" class="overflow-x-auto">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+
+        <section id="reivindicacoes" class="py-16">
+            <div class="text-center mb-10 px-6">
+                <h3 class="text-3xl font-bold text-slate-800 mb-3">Pauta de Reivindicações e Ação com Assistente IA</h3>
+                <p class="max-w-3xl mx-auto text-slate-600">
+                    O cenário exige ação imediata. Utilize o poder da IA para transformar análise em ação. Clique nos botões abaixo para gerar minutas de ofícios e requerimentos baseados nas propostas, prontos para serem protocolados.
+                </p>
+            </div>
+            <div class="max-w-4xl mx-auto px-6 space-y-6">
+                <div class="p-6 bg-slate-50 rounded-lg border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"><div><h4 class="font-bold text-slate-800 mb-2">1. Revisão Imediata da Tabela Remuneratória</h4><p class="text-sm text-slate-600">Propor um Projeto de Lei para alterar o Anexo da Lei nº 4.662/2025, estabelecendo como novos vencimentos iniciais, no mínimo, os valores que recompõem o poder de compra de 2019: **R$ 10.318,87** para Analista e **R$ 7.686,76** para Técnico/Policial.</p></div><button class="gemini-btn font-bold py-2 px-4 rounded-lg shadow-md w-full sm:w-auto flex-shrink-0" data-action="revisao">✨ Gerar Minuta</button></div>
+                <div class="p-6 bg-slate-50 rounded-lg border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"><div><h4 class="font-bold text-slate-800 mb-2">2. Reestruturação Racional do Plano de Carreira</h4><p class="text-sm text-slate-600">Reduzir o número de padrões para um total entre 15 e 20 e o interstício de progressão para 12 ou 18 meses, criando um modelo exequível e alinhado às boas práticas do setor público.</p></div><button class="gemini-btn font-bold py-2 px-4 rounded-lg shadow-md w-full sm:w-auto flex-shrink-0" data-action="carreira">✨ Gerar Minuta</button></div>
+                 <div class="p-6 bg-slate-50 rounded-lg border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"><div><h4 class="font-bold text-slate-800 mb-2">3. Ação Política e Institucional</h4><p class="text-sm text-slate-600">Protocolar este relatório junto à Mesa Diretora, distribuir aos Deputados e dar ampla publicidade ao problema, enquadrando-o como uma defesa da eficiência e da força institucional do Poder Legislativo do Tocantins.</p></div><button class="gemini-btn font-bold py-2 px-4 rounded-lg shadow-md w-full sm:w-auto flex-shrink-0" data-action="politica">✨ Gerar Minuta</button></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-16"><div class="container mx-auto px-6 text-center text-sm"><p>Dossiê Interativo gerado em agosto de 2025.</p><p>Uma ferramenta de análise para subsidiar o diálogo e a valorização do servidor público.</p></div></footer>
+    
+    <div id="geminiModal" class="fixed inset-0 z-50 flex items-center justify-center hidden"><div class="absolute inset-0 bg-black/60 modal-backdrop"></div><div class="bg-white rounded-lg shadow-2xl p-6 md:p-8 w-11/12 max-w-2xl mx-auto relative modal-content transform scale-95"><button class="close-gemini-modal absolute top-3 right-4 text-slate-500 hover:text-slate-800 text-2xl font-bold">&times;</button><h3 id="geminiModalTitle" class="text-2xl font-bold text-slate-800 mb-4">Assistente Gemini ✨</h3><div id="geminiModalBody" class="bg-slate-100 p-4 rounded-md max-h-[60vh] overflow-y-auto text-sm text-slate-700 leading-relaxed"><div id="geminiLoader" class="flex flex-col items-center justify-center h-48"><div class="loader"></div><p class="mt-4 text-slate-600 font-medium">Gerando minuta com a IA... Por favor, aguarde.</p></div><div id="geminiResponse" class="whitespace-pre-wrap hidden"></div></div><div class="mt-6 flex justify-end"><button id="copyGeminiText" class="bg-slate-800 text-white font-bold py-2 px-5 rounded-lg shadow-md hover:bg-slate-700 transition-colors hidden">Copiar Texto</button><button class="close-gemini-modal bg-slate-200 text-slate-800 font-bold py-2 px-5 rounded-lg ml-4 hover:bg-slate-300 transition-colors">Fechar</button></div></div></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const formatCurrency = (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+
+            // Chart Data & Initialization
+            const perdaSalarialData = {
+                analista: { labels: ['Venc. 2019 (Original)', 'Venc. 2019 (Corrigido p/ 2025)', 'Venc. 2025 (Lei 4.662)'], datasets: [{ label: 'Vencimento Inicial Analista (R$)', data: [8505.93, 10318.87, 6141.47], backgroundColor: ['rgba(100, 116, 139, 0.6)','rgba(51, 65, 85, 0.6)','rgba(245, 158, 11, 0.6)'], borderColor: ['rgb(100, 116, 139)','rgb(51, 65, 85)','rgb(245, 158, 11)'], borderWidth: 1 }] },
+                tecnico: { labels: ['Venc. 2019 (Original)', 'Venc. 2019 (Corrigido p/ 2025)', 'Venc. 2025 (Lei 4.662)'], datasets: [{ label: 'Vencimento Inicial Técnico (R$)', data: [6337.23, 7686.76, 4156.80], backgroundColor: ['rgba(100, 116, 139, 0.6)','rgba(51, 65, 85, 0.6)','rgba(245, 158, 11, 0.6)'], borderColor: ['rgb(100, 116, 139)','rgb(51, 65, 85)','rgb(245, 158, 11)'], borderWidth: 1 }] }
+            };
+            const perdaSalarialCtx = document.getElementById('perdaSalarialChart').getContext('2d');
+            const perdaSalarialChart = new Chart(perdaSalarialCtx, { type: 'bar', data: perdaSalarialData.analista, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => formatCurrency(c.raw) } }, title: { display: true, text: 'Comparativo do Vencimento Inicial de Analista Legislativo', font: { size: 16 }, color: '#334155' } }, scales: { y: { beginAtZero: true, ticks: { callback: (v) => formatCurrency(v) } } } } });
+            
+            const btnAnalistaPerda = document.getElementById('btnAnalistaPerda');
+            const btnTecnicoPerda = document.getElementById('btnTecnicoPerda');
+            function updatePerdaSalarialChart(level) {
+                const isAnalista = level === 'analista';
+                perdaSalarialChart.data = perdaSalarialData[level];
+                perdaSalarialChart.options.plugins.title.text = `Comparativo do Vencimento Inicial de ${isAnalista ? 'Analista' : 'Técnico/Policial'} Legislativo`;
+                perdaSalarialChart.update();
+                btnAnalistaPerda.classList.toggle('active-btn', isAnalista);
+                btnAnalistaPerda.classList.toggle('inactive-btn', !isAnalista);
+                btnTecnicoPerda.classList.toggle('active-btn', !isAnalista);
+                btnTecnicoPerda.classList.toggle('inactive-btn', isAnalista);
+            }
+            btnAnalistaPerda.addEventListener('click', () => updatePerdaSalarialChart('analista'));
+            btnTecnicoPerda.addEventListener('click', () => updatePerdaSalarialChart('tecnico'));
+
+
+            const comparativoData = {
+                superior: { labels: ['ALETO', 'MPTO', 'PCTO', 'DPETO', 'TJTO', 'SEFAZ-TO'], datasets: [{ label: 'Vencimento Básico Inicial (R$)', data: [6141.47, 11394.51, 10710.83, 11804.10, 13944.81, 33102.96], backgroundColor: 'rgba(51, 65, 85, 0.7)', borderColor: 'rgb(51, 65, 85)', borderWidth: 1 }] },
+                medio: { labels: ['ALETO', 'MPTO', 'DPETO', 'TJTO'], datasets: [{ label: 'Vencimento Básico Inicial (R$)', data: [4156.80, 5874.51, 5669.19, 8329.27], backgroundColor: 'rgba(245, 158, 11, 0.7)', borderColor: 'rgb(245, 158, 11)', borderWidth: 1 }] }
+            };
+            const comparativoCtx = document.getElementById('comparativoSalarialChart').getContext('2d');
+            const comparativoChart = new Chart(comparativoCtx, { type: 'bar', data: comparativoData.superior, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => formatCurrency(c.raw) } }, title: { display: true, text: 'Comparativo de Vencimentos Básicos Iniciais - Nível Superior', font: { size: 16 }, color: '#334155' } }, scales: { x: { beginAtZero: true, ticks: { callback: (v) => formatCurrency(v) } } } } });
+
+            const btnSuperior = document.getElementById('btnNivelSuperior');
+            const btnMedio = document.getElementById('btnNivelMedio');
+            function updateChart(level) { const isSuperior = level === 'superior'; comparativoChart.data = comparativoData[level]; comparativoChart.options.plugins.title.text = `Comparativo de Vencimentos Básicos Iniciais - Nível ${isSuperior ? 'Superior' : 'Médio'}`; comparativoChart.update(); btnSuperior.classList.toggle('active-btn', isSuperior); btnSuperior.classList.toggle('inactive-btn', !isSuperior); btnMedio.classList.toggle('active-btn', !isSuperior); btnMedio.classList.toggle('inactive-btn', isSuperior); }
+            btnSuperior.addEventListener('click', () => updateChart('superior'));
+            btnMedio.addEventListener('click', () => updateChart('medio'));
+
+            // Gemini Modal Logic
+            const geminiModal = document.getElementById('geminiModal');
+            function hideModal(modalElement) { modalElement.querySelector('.modal-backdrop').classList.add('opacity-0'); modalElement.querySelector('.modal-content').classList.add('scale-95'); setTimeout(() => modalElement.classList.add('hidden'), 300); }
+            const geminiLoader = document.getElementById('geminiLoader');
+            const geminiResponseEl = document.getElementById('geminiResponse');
+            const copyGeminiTextBtn = document.getElementById('copyGeminiText');
+            document.querySelectorAll('.gemini-btn').forEach(button => { button.addEventListener('click', async (e) => { const action = e.target.dataset.action; showGeminiModal(); const prompt = generatePrompt(action); try { const text = await callGeminiAPI(prompt); displayGeminiResponse(text); } catch (error) { displayGeminiResponse("Ocorreu um erro ao contatar o assistente de IA. Por favor, tente novamente mais tarde.\n\nDetalhes do erro: " + error.message); } }); });
+            function showGeminiModal() { geminiResponseEl.classList.add('hidden'); geminiLoader.style.display = 'flex'; copyGeminiTextBtn.classList.add('hidden'); geminiModal.classList.remove('hidden'); setTimeout(() => { geminiModal.querySelector('.modal-backdrop').classList.remove('opacity-0'); geminiModal.querySelector('.modal-content').classList.remove('scale-95'); }, 10); }
+            function displayGeminiResponse(text) { geminiLoader.style.display = 'none'; geminiResponseEl.textContent = text; geminiResponseEl.classList.remove('hidden'); copyGeminiTextBtn.classList.remove('hidden'); }
+            document.querySelectorAll('.close-gemini-modal').forEach(btn => { btn.addEventListener('click', () => hideModal(geminiModal)); });
+            copyGeminiTextBtn.addEventListener('click', () => { const textToCopy = geminiResponseEl.textContent; const textArea = document.createElement('textarea'); textArea.value = textToCopy; document.body.appendChild(textArea); textArea.select(); try { document.execCommand('copy'); copyGeminiTextBtn.textContent = 'Copiado!'; setTimeout(() => { copyGeminiTextBtn.textContent = 'Copiar Texto'; }, 2000); } catch (err) { console.error('Falha ao copiar texto: ', err); } document.body.removeChild(textArea); });
+            function generatePrompt(action) { const basePrompt = `Aja como um assessor jurídico e sindical experiente, especializado em serviço público brasileiro. Sua tarefa é redigir uma minuta de documento oficial (ofício) a ser enviado pelo Sindicato dos Servidores do Legislativo do Estado do Tocantins (Sindilegis-TO) à Mesa Diretora da Assembleia Legislativa do Tocantins (ALETO). Utilize uma linguagem formal, respeitosa e técnica. Contexto Geral do Relatório: - A Lei nº 4.662/2025 instituiu uma nova tabela remuneratória na ALETO. - A remuneração inicial para Analista (R$ 6.141,47) representa uma perda de poder de compra de 40,5% em relação ao valor de 2019 corrigido pela inflação (que seria R$ 10.318,87). - A remuneração é a mais baixa entre os poderes no Tocantins (ex: Analista do TJTO inicia com R$ 13.944,81). - O plano de carreira é inexequível, levando 94 anos para Analista e 106 anos para Técnico atingirem o topo. - Há uma comprovada evasão de talentos, com aprovados no último concurso desistindo ou pedindo final de fila. Com base nesse contexto, redija a minuta do ofício focando na seguinte pauta específica:`; switch (action) { case 'revisao': return `${basePrompt}\n\n**Pauta Específica:** "Revisão Imediata da Tabela Remuneratória". O ofício deve solicitar formalmente a elaboração de um Projeto de Lei para alterar o Anexo da Lei nº 4.662/2025. O objetivo é estabelecer como novos vencimentos iniciais, no mínimo, os valores que recompõem o poder de compra de 2019 (R$ 10.318,87 para Analista e R$ 7.686,76 para Técnico/Policial). Argumente que a medida é uma "recomposição do valor histórico do cargo" para corrigir a distorção e o retrocesso, e não um "aumento". Mencione a perda de poder de compra e a disparidade com outros órgãos como justificativa principal.`; case 'carreira': return `${basePrompt}\n\n**Pauta Específica:** "Reestruturação Racional do Plano de Carreira". O ofício deve solicitar a alteração da estrutura de carreira para um modelo exequível. A proposta deve incluir a redução do número de padrões para um total entre 15 e 20, e a redução do interstício de progressão de 24 meses para 12 ou 18 meses. Argumente que o modelo atual (94-106 anos para o topo) é uma "ficção jurídica" que viola o princípio da eficiência administrativa, desmotiva os servidores e impede o desenvolvimento profissional, tornando a carreira não atrativa.`; case 'politica': return `${basePrompt}\n\n**Pauta Específica:** "Abertura de Canal de Negociação Formal e Ação Institucional". O ofício deve ter um tom de solicitação de audiência e apresentação formal dos problemas. Ele deve solicitar o protocolo do relatório completo e a abertura de um canal de negociação com a Mesa Diretora para debater as pautas de recomposição salarial e reestruturação da carreira. Argumente que a evasão de talentos e a desvalorização do quadro técnico representam um enfraquecimento institucional para o próprio Poder Legislativo, prejudicando sua capacidade de fiscalização e produção legislativa, configurando uma "falsa economia" que compromete a eficiência da Administração Pública.`; default: return "Por favor, gere um texto genérico sobre a importância da valorização do servidor público."; } }
+            async function callGeminiAPI(prompt, retries = 3, delay = 1000) { const apiKey = ""; const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`; const payload = { contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.5, topK: 1, topP: 1, maxOutputTokens: 8192, }, }; try { const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); if (!response.ok) { if (response.status === 429 && retries > 0) { await new Promise(res => setTimeout(res, delay)); return callGeminiAPI(prompt, retries - 1, delay * 2); } throw new Error(`HTTP error! status: ${response.status}`); } const result = await response.json(); if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts.length > 0) { return result.candidates[0].content.parts[0].text; } else { throw new Error("Resposta da API inválida ou vazia."); } } catch (error) { if (retries > 0) { await new Promise(res => setTimeout(res, delay)); return callGeminiAPI(prompt, retries - 1, delay * 2); } throw error; } }
+
+            // Tab and Table Logic
+            const salaryData = {
+                aleto: { source: "Lei nº 4.662 de 30 de abril de 2025", analista: [ { "CLASSE": "A", "PADRÃO": 1, "VENCIMENTO": 6141.47 }, { "CLASSE": "A", "PADRÃO": 2, "VENCIMENTO": 6448.54 }, { "CLASSE": "A", "PADRÃO": 3, "VENCIMENTO": 6770.97 }, { "CLASSE": "A", "PADRÃO": 4, "VENCIMENTO": 7109.52 }, { "CLASSE": "A", "PADRÃO": 5, "VENCIMENTO": 7465 }, { "CLASSE": "A", "PADRÃO": 6, "VENCIMENTO": 7838.24 }, { "CLASSE": "B", "PADRÃO": 7, "VENCIMENTO": 8230.16 }, { "CLASSE": "B", "PADRÃO": 8, "VENCIMENTO": 8641.67 }, { "CLASSE": "B", "PADRÃO": 9, "VENCIMENTO": 9073.75 }, { "CLASSE": "B", "PADRÃO": 10, "VENCIMENTO": 9527.44 }, { "CLASSE": "B", "PADRÃO": 11, "VENCIMENTO": 10003.81 }, { "CLASSE": "B", "PADRÃO": 12, "VENCIMENTO": 10504 }, { "CLASSE": "C", "PADRÃO": 13, "VENCIMENTO": 11029.2 }, { "CLASSE": "C", "PADRÃO": 14, "VENCIMENTO": 11580.66 }, { "CLASSE": "C", "PADRÃO": 15, "VENCIMENTO": 12159.69 }, { "CLASSE": "C", "PADRÃO": 16, "VENCIMENTO": 12767.68 }, { "CLASSE": "C", "PADRÃO": 17, "VENCIMENTO": 13406.06 }, { "CLASSE": "C", "PADRÃO": 18, "VENCIMENTO": 14076.36 }, { "CLASSE": "D", "PADRÃO": 19, "VENCIMENTO": 14780.18 }, { "CLASSE": "D", "PADRÃO": 20, "VENCIMENTO": 15519.19 }, { "CLASSE": "D", "PADRÃO": 21, "VENCIMENTO": 16295.15 }, { "CLASSE": "D", "PADRÃO": 22, "VENCIMENTO": 17109.91 }, { "CLASSE": "D", "PADRÃO": 23, "VENCIMENTO": 17965.4 }, { "CLASSE": "D", "PADRÃO": 24, "VENCIMENTO": 18863.67 }, { "CLASSE": "E", "PADRÃO": 25, "VENCIMENTO": 19806.85 }, { "CLASSE": "E", "PADRÃO": 26, "VENCIMENTO": 20797.2 }, { "CLASSE": "E", "PADRÃO": 27, "VENCIMENTO": 21837.06 }, { "CLASSE": "E", "PADRÃO": 28, "VENCIMENTO": 22928.91 }, { "CLASSE": "E", "PADRÃO": 29, "VENCIMENTO": 24075.36 }, { "CLASSE": "E", "PADRÃO": 30, "VENCIMENTO": 25279.12 }, { "CLASSE": "F", "PADRÃO": 31, "VENCIMENTO": 26543.08 }, { "CLASSE": "F", "PADRÃO": 32, "VENCIMENTO": 27870.23 }, { "CLASSE": "F", "PADRÃO": 33, "VENCIMENTO": 29263.75 }, { "CLASSE": "F", "PADRÃO": 34, "VENCIMENTO": 30726.93 }, { "CLASSE": "F", "PADRÃO": 35, "VENCIMENTO": 32263.28 }, { "CLASSE": "F", "PADRÃO": 36, "VENCIMENTO": 33876.44 }, { "CLASSE": "G", "PADRÃO": 37, "VENCIMENTO": 35570.27 }, { "CLASSE": "G", "PADRÃO": 38, "VENCIMENTO": 37348.78 }, { "CLASSE": "G", "PADRÃO": 39, "VENCIMENTO": 39216.22 }, { "CLASSE": "G", "PADRÃO": 40, "VENCIMENTO": 41177.03 }, { "CLASSE": "G", "PADRÃO": 41, "VENCIMENTO": 43235.88 }, { "CLASSE": "G", "PADRÃO": 42, "VENCIMENTO": 45397.67 }, { "CLASSE": "H", "PADRÃO": 43, "VENCIMENTO": 47667.56 }, { "CLASSE": "H", "PADRÃO": 44, "VENCIMENTO": 50050.93 }, { "CLASSE": "H", "PADRÃO": 45, "VENCIMENTO": 52553.48 }, { "CLASSE": "H", "PADRÃO": 46, "VENCIMENTO": 55181.16 }, { "CLASSE": "H", "PADRÃO": 47, "VENCIMENTO": 57940.21 }, { "CLASSE": "H", "PADRÃO": 48, "VENCIMENTO": 60837.22 } ], tecnico: [ { "CLASSE": "A", "PADRÃO": 1, "VENCIMENTO": 4156.8 }, { "CLASSE": "A", "PADRÃO": 2, "VENCIMENTO": 4364.64 }, { "CLASSE": "A", "PADRÃO": 3, "VENCIMENTO": 4582.87 }, { "CLASSE": "A", "PADRÃO": 4, "VENCIMENTO": 4812.02 }, { "CLASSE": "A", "PADRÃO": 5, "VENCIMENTO": 5052.62 }, { "CLASSE": "A", "PADRÃO": 6, "VENCIMENTO": 5305.25 }, { "CLASSE": "B", "PADRÃO": 7, "VENCIMENTO": 5570.51 }, { "CLASSE": "B", "PADRÃO": 8, "VENCIMENTO": 5849.04 }, { "CLASSE": "B", "PADRÃO": 9, "VENCIMENTO": 6141.49 }, { "CLASSE": "B", "PADRÃO": 10, "VENCIMENTO": 6448.56 }, { "CLASSE": "B", "PADRÃO": 11, "VENCIMENTO": 6770.99 }, { "CLASSE": "B", "PADRÃO": 12, "VENCIMENTO": 7109.54 }, { "CLASSE": "C", "PADRÃO": 13, "VENCIMENTO": 7465.02 }, { "CLASSE": "C", "PADRÃO": 14, "VENCIMENTO": 7838.27 }, { "CLASSE": "C", "PADRÃO": 15, "VENCIMENTO": 8230.18 }, { "CLASSE": "C", "PADRÃO": 16, "VENCIMENTO": 8641.69 }, { "CLASSE": "C", "PADRÃO": 17, "VENCIMENTO": 9073.77 }, { "CLASSE": "C", "PADRÃO": 18, "VENCIMENTO": 9527.46 }, { "CLASSE": "D", "PADRÃO": 19, "VENCIMENTO": 10003.83 }, { "CLASSE": "D", "PADRÃO": 20, "VENCIMENTO": 10504.03 }, { "CLASSE": "D", "PADRÃO": 21, "VENCIMENTO": 11029.23 }, { "CLASSE": "D", "PADRÃO": 22, "VENCIMENTO": 11580.69 }, { "CLASSE": "D", "PADRÃO": 23, "VENCIMENTO": 12159.72 }, { "CLASSE": "D", "PADRÃO": 24, "VENCIMENTO": 12767.71 }, { "CLASSE": "E", "PADRÃO": 25, "VENCIMENTO": 13406.1 }, { "CLASSE": "E", "PADRÃO": 26, "VENCIMENTO": 14076.4 }, { "CLASSE": "E", "PADRÃO": 27, "VENCIMENTO": 14780.22 }, { "CLASSE": "E", "PADRÃO": 28, "VENCIMENTO": 15519.23 }, { "CLASSE": "E", "PADRÃO": 29, "VENCIMENTO": 16295.19 }, { "CLASSE": "E", "PADRÃO": 30, "VENCIMENTO": 17109.95 }, { "CLASSE": "F", "PADRÃO": 31, "VENCIMENTO": 17965.45 }, { "CLASSE": "F", "PADRÃO": 32, "VENCIMENTO": 18863.72 }, { "CLASSE": "F", "PADRÃO": 33, "VENCIMENTO": 19806.91 }, { "CLASSE": "F", "PADRÃO": 34, "VENCIMENTO": 20797.25 }, { "CLASSE": "F", "PADRÃO": 35, "VENCIMENTO": 21837.12 }, { "CLASSE": "F", "PADRÃO": 36, "VENCIMENTO": 22928.97 }, { "CLASSE": "G", "PADRÃO": 37, "VENCIMENTO": 24075.42 }, { "CLASSE": "G", "PADRÃO": 38, "VENCIMENTO": 25279.19 }, { "CLASSE": "G", "PADRÃO": 39, "VENCIMENTO": 26543.15 }, { "CLASSE": "G", "PADRÃO": 40, "VENCIMENTO": 27870.31 }, { "CLASSE": "G", "PADRÃO": 41, "VENCIMENTO": 29263.83 }, { "CLASSE": "G", "PADRÃO": 42, "VENCIMENTO": 30727.02 }, { "CLASSE": "H", "PADRÃO": 43, "VENCIMENTO": 32263.37 }, { "CLASSE": "H", "PADRÃO": 44, "VENCIMENTO": 33876.54 }, { "CLASSE": "H", "PADRÃO": 45, "VENCIMENTO": 35570.36 }, { "CLASSE": "H", "PADRÃO": 46, "VENCIMENTO": 37348.88 }, { "CLASSE": "H", "PADRÃO": 47, "VENCIMENTO": 39216.32 }, { "CLASSE": "H", "PADRÃO": 48, "VENCIMENTO": 41177.14 }, { "CLASSE": "I", "PADRÃO": 49, "VENCIMENTO": 43236 }, { "CLASSE": "I", "PADRÃO": 50, "VENCIMENTO": 45397.8 }, { "CLASSE": "I", "PADRÃO": 51, "VENCIMENTO": 47667.69 }, { "CLASSE": "I", "PADRÃO": 52, "VENCIMENTO": 50051.07 }, { "CLASSE": "I", "PADRÃO": 53, "VENCIMENTO": 52553.63 }, { "CLASSE": "I", "PADRÃO": 54, "VENCIMENTO": 55181.31 } ] },
+                tjto: { source: "Lei nº 4.435 de 19 de junho de 2024", analista: [ { "CLASSE": "A", "PADRÃO": 1, "VENCIMENTO": 13944.81 }, { "CLASSE": "A", "PADRÃO": 2, "VENCIMENTO": 14642.07 }, { "CLASSE": "A", "PADRÃO": 3, "VENCIMENTO": 15374.18 }, { "CLASSE": "A", "PADRÃO": 4, "VENCIMENTO": 16142.87 }, { "CLASSE": "A", "PADRÃO": 5, "VENCIMENTO": 16950 }, { "CLASSE": "B", "PADRÃO": 6, "VENCIMENTO": 17797.51 }, { "CLASSE": "B", "PADRÃO": 7, "VENCIMENTO": 18687.38 }, { "CLASSE": "B", "PADRÃO": 8, "VENCIMENTO": 19621.75 }, { "CLASSE": "B", "PADRÃO": 9, "VENCIMENTO": 20602.77 }, { "CLASSE": "B", "PADRÃO": 10, "VENCIMENTO": 21633 }, { "CLASSE": "C", "PADRÃO": 11, "VENCIMENTO": 22714.63 }, { "CLASSE": "C", "PADRÃO": 12, "VENCIMENTO": 23850.35 }, { "CLASSE": "C", "PADRÃO": 13, "VENCIMENTO": 25042.89 }, { "CLASSE": "C", "PADRÃO": 14, "VENCIMENTO": 26295.03 }, { "CLASSE": "C", "PADRÃO": 15, "VENCIMENTO": 27609.79 } ], tecnico: [ { "CLASSE": "A", "PADRÃO": 1, "VENCIMENTO": 8329.27 }, { "CLASSE": "A", "PADRÃO": 2, "VENCIMENTO": 8745.73 }, { "CLASSE": "A", "PADRÃO": 3, "VENCIMENTO": 9183.02 }, { "CLASSE": "A", "PADRÃO": 4, "VENCIMENTO": 9642.17 }, { "CLASSE": "A", "PADRÃO": 5, "VENCIMENTO": 10124.27 }, { "CLASSE": "B", "PADRÃO": 6, "VENCIMENTO": 10630.47 }, { "CLASSE": "B", "PADRÃO": 7, "VENCIMENTO": 11162.03 }, { "CLASSE": "B", "PADRÃO": 8, "VENCIMENTO": 11720.11 }, { "CLASSE": "B", "PADRÃO": 9, "VENCIMENTO": 12306.13 }, { "CLASSE": "B", "PADRÃO": 10, "VENCIMENTO": 12921.42 }, { "CLASSE": "C", "PADRÃO": 11, "VENCIMENTO": 13567.49 }, { "CLASSE": "C", "PADRÃO": 12, "VENCIMENTO": 14245.88 }, { "CLASSE": "C", "PADRÃO": 13, "VENCIMENTO": 14958.17 }, { "CLASSE": "C", "PADRÃO": 14, "VENCIMENTO": 15706.08 }, { "CLASSE": "C", "PADRÃO": 15, "VENCIMENTO": 16491.4 } ] },
+                dpeto: { source: "Lei Complementar nº 154, de 10 de maio de 2024", analista: [ { "CLASSE": "A", "PADRÃO": 1, "VENCIMENTO": 11804.1 }, { "CLASSE": "A", "PADRÃO": 2, "VENCIMENTO": 12394.31 }, { "CLASSE": "A", "PADRÃO": 3, "VENCIMENTO": 13014.02 }, { "CLASSE": "A", "PADRÃO": 4, "VENCIMENTO": 13664.72 }, { "CLASSE": "A", "PADRÃO": 5, "VENCIMENTO": 14347.96 }, { "CLASSE": "A", "PADRÃO": 6, "VENCIMENTO": 15065.36 }, { "CLASSE": "A", "PADRÃO": 7, "VENCIMENTO": 15818.62 }, { "CLASSE": "B", "PADRÃO": 1, "VENCIMENTO": 16609.56 }, { "CLASSE": "B", "PADRÃO": 2, "VENCIMENTO": 17440.03 }, { "CLASSE": "B", "PADRÃO": 3, "VENCIMENTO": 18312.04 }, { "CLASSE": "B", "PADRÃO": 4, "VENCIMENTO": 19227.64 }, { "CLASSE": "B", "PADRÃO": 5, "VENCIMENTO": 20189.02 }, { "CLASSE": "B", "PADRÃO": 6, "VENCIMENTO": 21198.47 }, { "CLASSE": "B", "PADRÃO": 7, "VENCIMENTO": 22258.39 }, { "CLASSE": "C", "PADRÃO": 1, "VENCIMENTO": 23371.31 }, { "CLASSE": "C", "PADRÃO": 2, "VENCIMENTO": 24539.88 }, { "CLASSE": "C", "PADRÃO": 3, "VENCIMENTO": 25766.87 }, { "CLASSE": "C", "PADRÃO": 4, "VENCIMENTO": 27055.22 }, { "CLASSE": "C", "PADRÃO": 5, "VENCIMENTO": 28407.98 }, { "CLASSE": "C", "PADRÃO": 6, "VENCIMENTO": 29828.38 }, { "CLASSE": "C", "PADRÃO": 7, "VENCIMENTO": 31319.79 } ], tecnico: [ { "CLASSE": "A", "PADRÃO": 1, "VENCIMENTO": 5669.19 }, { "CLASSE": "A", "PADRÃO": 2, "VENCIMENTO": 5952.65 }, { "CLASSE": "A", "PADRÃO": 3, "VENCIMENTO": 6250.28 }, { "CLASSE": "A", "PADRÃO": 4, "VENCIMENTO": 6562.79 }, { "CLASSE": "A", "PADRÃO": 5, "VENCIMENTO": 6890.93 }, { "CLASSE": "A", "PADRÃO": 6, "VENCIMENTO": 7235.48 }, { "CLASSE": "A", "PADRÃO": 7, "VENCIMENTO": 7597.26 }, { "CLASSE": "B", "PADRÃO": 1, "VENCIMENTO": 7977.12 }, { "CLASSE": "B", "PADRÃO": 2, "VENCIMENTO": 8375.97 }, { "CLASSE": "B", "PADRÃO": 3, "VENCIMENTO": 8794.77 }, { "CLASSE": "B", "PADRÃO": 4, "VENCIMENTO": 9234.51 }, { "CLASSE": "B", "PADRÃO": 5, "VENCIMENTO": 9696.24 }, { "CLASSE": "B", "PADRÃO": 6, "VENCIMENTO": 10181.05 }, { "CLASSE": "B", "PADRÃO": 7, "VENCIMENTO": 10690.1 }, { "CLASSE": "C", "PADRÃO": 1, "VENCIMENTO": 11224.61 }, { "CLASSE": "C", "PADRÃO": 2, "VENCIMENTO": 11785.84 }, { "CLASSE": "C", "PADRÃO": 3, "VENCIMENTO": 12375.13 }, { "CLASSE": "C", "PADRÃO": 4, "VENCIMENTO": 12993.88 }, { "CLASSE": "C", "PADRÃO": 5, "VENCIMENTO": 13643.58 }, { "CLASSE": "C", "PADRÃO": 6, "VENCIMENTO": 14325.76 }, { "CLASSE": "C", "PADRÃO": 7, "VENCIMENTO": 15042.05 } ] },
+                mpto: { source: "Lei nº 3.472 de 27 de maio de 2019 (valores desatualizados)", analista: [ { "Classe": "IA", "Padrão": 1, "Vencimento": 11394.51 }, { "Classe": "IA", "Padrão": 2, "Vencimento": 12334.56 }, { "Classe": "IA", "Padrão": 3, "Vencimento": 12673.76 }, { "Classe": "IA", "Padrão": 4, "Vencimento": 13022.29 }, { "Classe": "IA", "Padrão": 5, "Vencimento": 13380.4 }, { "Classe": "IA", "Padrão": 6, "Vencimento": 13748.36 }, { "Classe": "IB", "Padrão": 1, "Vencimento": 14504.52 }, { "Classe": "IB", "Padrão": 2, "Vencimento": 14903.39 }, { "Classe": "IB", "Padrão": 3, "Vencimento": 15313.23 }, { "Classe": "IB", "Padrão": 4, "Vencimento": 15734.34 }, { "Classe": "IB", "Padrão": 5, "Vencimento": 16167.03 }, { "Classe": "IB", "Padrão": 6, "Vencimento": 16611.62 }, { "Classe": "IB", "Padrão": 7, "Vencimento": 17068.44 }, { "Classe": "IB", "Padrão": 8, "Vencimento": 17537.82 }, { "Classe": "IB", "Padrão": 9, "Vencimento": 18020.11 }, { "Classe": "IC", "Padrão": 1, "Vencimento": 18990.28 }, { "Classe": "IC", "Padrão": 2, "Vencimento": 19521.05 }, { "Classe": "IC", "Padrão": 3, "Vencimento": 20065.17 }, { "Classe": "IC", "Padrão": 4, "Vencimento": 20622.12 }, { "Classe": "IC", "Padrão": 5, "Vencimento": 21192.1 }, { "Classe": "IC", "Padrão": 6, "Vencimento": 21775.29 }, { "Classe": "IC", "Padrão": 7, "Vencimento": 22372.01 }, { "Classe": "IC", "Padrão": 8, "Vencimento": 22982.52 }, { "Classe": "IC", "Padrão": 9, "Vencimento": 23607.16 }, { "Classe": "IC", "Padrão": 10, "Vencimento": 24246.28 }, { "Classe": "IC", "Padrão": 11, "Vencimento": 24900.26 }, { "Classe": "IC", "Padrão": 12, "Vencimento": 25569.49 } ], tecnico: [ { "Classe": "FA", "Padrão": 1, "Vencimento": 5874.51 }, { "Classe": "FA", "Padrão": 2, "Vencimento": 6359.16 }, { "Classe": "FA", "Padrão": 3, "Vencimento": 6534.04 }, { "Classe": "FA", "Padrão": 4, "Vencimento": 6713.73 }, { "Classe": "FA", "Padrão": 5, "Vencimento": 6898.36 }, { "Classe": "FA", "Padrão": 6, "Vencimento": 7088.06 }, { "Classe": "FB", "Padrão": 1, "Vencimento": 7477.9 }, { "Classe": "FB", "Padrão": 2, "Vencimento": 7683.54 }, { "Classe": "FB", "Padrão": 3, "Vencimento": 7894.84 }, { "Classe": "FB", "Padrão": 4, "Vencimento": 8111.95 }, { "Classe": "FB", "Padrão": 5, "Vencimento": 8335.03 }, { "Classe": "FB", "Padrão": 6, "Vencimento": 8564.24 }, { "Classe": "FB", "Padrão": 7, "Vencimento": 8799.76 }, { "Classe": "FB", "Padrão": 8, "Vencimento": 9041.75 }, { "Classe": "FB", "Padrão": 9, "Vencimento": 9290.39 }, { "Classe": "FC", "Padrão": 1, "Vencimento": 9794.83 }, { "Classe": "FC", "Padrão": 2, "Vencimento": 10064.16 }, { "Classe": "FC", "Padrão": 3, "Vencimento": 10340.58 }, { "Classe": "FC", "Padrão": 4, "Vencimento": 10624.27 }, { "Classe": "FC", "Padrão": 5, "Vencimento": 10915.42 }, { "Classe": "FC", "Padrão": 6, "Vencimento": 11214.24 }, { "Classe": "FC", "Padrão": 7, "Vencimento": 11520.93 }, { "Classe": "FC", "Padrão": 8, "Vencimento": 11835.72 }, { "Classe": "FC", "Padrão": 9, "Vencimento": 12158.82 }, { "Classe": "FC", "Padrão": 10, "Vencimento": 12490.49 }, { "Classe": "FC", "Padrão": 11, "Vencimento": 12831 }, { "Classe": "FC", "Padrão": 12, "Vencimento": 13180.59 } ] },
+                pcto: { source: "Lei nº 4.653, de 9 de abril de 2025", analista: [ { "CLASSE": "I", "PADRÃO": "A", "VENCIMENTO": 10710.83 }, { "CLASSE": "I", "PADRÃO": "B", "VENCIMENTO": 11246.37 }, { "CLASSE": "I", "PADRÃO": "C", "VENCIMENTO": 11808.72 }, { "CLASSE": "I", "PADRÃO": "D", "VENCIMENTO": 12399.14 }, { "CLASSE": "I", "PADRÃO": "E", "VENCIMENTO": 13019.1 }, { "CLASSE": "I", "PADRÃO": "F", "VENCIMENTO": 13670.06 }, { "CLASSE": "I", "PADRÃO": "G", "VENCIMENTO": 14353.55 }, { "CLASSE": "I", "PADRÃO": "H", "VENCIMENTO": 15071.22 }, { "CLASSE": "I", "PADRÃO": "I", "VENCIMENTO": 15824.8 }, { "CLASSE": "I", "PADRÃO": "J", "VENCIMENTO": 16616.03 }, { "CLASSE": "I", "PADRÃO": "L", "VENCIMENTO": 17446.83 }, { "CLASSE": "II", "PADRÃO": "A", "VENCIMENTO": 11781.91 }, { "CLASSE": "II", "PADRÃO": "B", "VENCIMENTO": 12371.02 }, { "CLASSE": "II", "PADRÃO": "C", "VENCIMENTO": 12989.58 }, { "CLASSE": "II", "PADRÃO": "D", "VENCIMENTO": 13639.05 }, { "CLASSE": "II", "PADRÃO": "E", "VENCIMENTO": 14321.02 }, { "CLASSE": "II", "PADRÃO": "F", "VENCIMENTO": 15037.07 }, { "CLASSE": "II", "PADRÃO": "G", "VENCIMENTO": 15788.91 }, { "CLASSE": "II", "PADRÃO": "H", "VENCIMENTO": 16578.37 }, { "CLASSE": "II", "PADRÃO": "I", "VENCIMENTO": 17407.3 }, { "CLASSE": "II", "PADRÃO": "J", "VENCIMENTO": 18277.63 }, { "CLASSE": "II", "PADRÃO": "L", "VENCIMENTO": 19191.54 }, { "CLASSE": "III", "PADRÃO": "A", "VENCIMENTO": 12960.1 }, { "CLASSE": "III", "PADRÃO": "B", "VENCIMENTO": 13608.13 }, { "CLASSE": "III", "PADRÃO": "C", "VENCIMENTO": 14288.54 }, { "CLASSE": "III", "PADRÃO": "D", "VENCIMENTO": 15002.96 }, { "CLASSE": "III", "PADRÃO": "E", "VENCIMENTO": 15753.12 }, { "CLASSE": "III", "PADRÃO": "F", "VENCIMENTO": 16540.76 }, { "CLASSE": "III", "PADRÃO": "G", "VENCIMENTO": 17367.81 }, { "CLASSE": "III", "PADRÃO": "H", "VENCIMENTO": 18236.18 }, { "CLASSE": "III", "PADRÃO": "I", "VENCIMENTO": 19148 }, { "CLASSE": "III", "PADRÃO": "J", "VENCIMENTO": 20105.39 }, { "CLASSE": "III", "PADRÃO": "L", "VENCIMENTO": 21110.68 } ], tecnico: [] },
+                sefazto: { source: "Tabela completa de progressão estimada", analista: [ { "CLASSE": "A", "PADRÃO": "I", "VENCIMENTO": 33102.96 }, { "CLASSE": "A", "PADRÃO": "II", "VENCIMENTO": 33693.71 }, { "CLASSE": "B", "PADRÃO": "III", "VENCIMENTO": 35618.54 }, { "CLASSE": "B", "PADRÃO": "IV", "VENCIMENTO": 36271.62 }, { "CLASSE": "B", "PADRÃO": "V", "VENCIMENTO": 36940.77 }, { "CLASSE": "C", "PADRÃO": "V", "VENCIMENTO": 38399.32 }, { "CLASSE": "C", "PADRÃO": "VI", "VENCIMENTO": 39118.29 }, { "CLASSE": "C", "PADRÃO": "VII", "VENCIMENTO": 39854.94 }, { "CLASSE": "D", "PADRÃO": "VIII", "VENCIMENTO": 44694.72 }, { "CLASSE": "D", "PADRÃO": "IX", "VENCIMENTO": 45570.73 }, { "CLASSE": "D", "PADRÃO": "X", "VENCIMENTO": 46468.4 }, { "CLASSE": "D", "PADRÃO": "XI", "VENCIMENTO": 47388.23 }, { "CLASSE": "D", "PADRÃO": "XII", "VENCIMENTO": 48330.79 } ], tecnico: [] }
+            };
+            const tabContainer = document.getElementById('tab-content');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+
+            function createTable(headers, data, source, compareData) {
+                let table = `<div class="w-full">`;
+                table += `<table class="w-full text-sm text-left text-slate-500">`;
+                table += `<thead class="text-xs text-slate-700 uppercase bg-slate-100"><tr>`;
+                headers.forEach(h => table += `<th scope="col" class="px-6 py-3">${h}</th>`);
+                table += `</tr></thead><tbody>`;
+                data.forEach((row, index) => {
+                    table += `<tr class="${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'} border-b border-slate-200">`;
+                    headers.forEach(h => {
+                        const key = Object.keys(row).find(k => k.toLowerCase() === h.toLowerCase());
+                        const value = row[key];
+                        let cellContent = h.toLowerCase() === 'vencimento' ? formatCurrency(value) : value;
+
+                        if (compareData && h.toLowerCase() === 'vencimento' && index < compareData.length) {
+                            const baseValue = compareData[index].VENCIMENTO;
+                            const diff = ((value / baseValue) - 1) * 100;
+                            if (diff > 0) {
+                                cellContent += ` <span class="text-green-600 font-medium text-xs">(${diff.toFixed(1)}%)</span>`;
+                            }
+                        }
+                        table += `<td class="px-6 py-3 ${h.toLowerCase() === 'vencimento' ? 'font-medium text-slate-900' : ''}">${cellContent}</td>`;
+                    });
+                    table += `</tr>`;
+                });
+                table += `</tbody></table>`;
+                if(source) {
+                    table += `<p class="text-xs text-slate-500 mt-2 text-right italic">Fonte: ${source}</p>`;
+                }
+                table += `</div>`;
+                return table;
+            }
+
+            function renderTabContent(tabId) {
+                const data = salaryData[tabId];
+                let content = '';
+                const isAleto = tabId === 'aleto';
+
+                if (data.analista.length > 0) {
+                    content += `<h4 class="text-lg font-bold text-slate-800 mt-4 mb-2">Nível Superior (Analista/Equivalente)</h4>`;
+                    content += createTable(Object.keys(data.analista[0]), data.analista, data.source, isAleto ? null : salaryData.aleto.analista);
+                }
+                if (data.tecnico.length > 0) {
+                    content += `<h4 class="text-lg font-bold text-slate-800 mt-6 mb-2">Nível Médio (Técnico/Equivalente)</h4>`;
+                    content += createTable(Object.keys(data.tecnico[0]), data.tecnico, data.source, isAleto ? null : salaryData.aleto.tecnico);
+                }
+                if(content === '') {
+                    content = `<div class="text-center text-slate-500 py-8"><p>Não há dados de progressão para este cargo no relatório.</p><p class="text-xs mt-2 italic">Fonte: ${data.source}</p></div>`;
+                }
+                tabContainer.innerHTML = content;
+            }
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    renderTabContent(button.dataset.tab);
+                });
+            });
+
+            renderTabContent('aleto');
+        });
+    </script>
+</body>
+</html>

@@ -12,7 +12,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/voaneves/salarioaleto">
-    <img src="assets/img/logo.svg" alt="Logotipo" />    
+    <img src="/assets/img/logo.svg" alt="Logotipo" />    
   </a>
   <h3 align="center">📊 Dossiê Interativo: Análise da Remuneração na ALETO</h3>
   <p align="center">

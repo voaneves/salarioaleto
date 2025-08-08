@@ -59,7 +59,7 @@ A página guia o usuário através de uma análise completa, abordando a perda h
     <img src="assets/img/screenshot.png" alt="Screenshot da página inicial">
   </a>
 </div>
-<p align="center"><i>Substitua a imagem acima por um screenshot real do projeto.</i></p>
+<p align="center"><i>Screenshot da página inicial do projeto.</i></p>
 
 <p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
 

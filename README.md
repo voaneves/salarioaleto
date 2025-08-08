@@ -12,7 +12,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/voaneves/salarioaleto">
-    <img src="/assets/img/logo.svg" alt="Logotipo" />    
+    <img src="assets/img/logo.svg" alt="Logotipo" />    
   </a>
   <h3 align="center">📊 Dossiê Interativo: Análise da Remuneração na ALETO</h3>
   <p align="center">
@@ -21,7 +21,7 @@
     <a href="https://github.com/voaneves/salarioaleto"><strong>Explore o código-fonte »</strong></a>
     <br />
     <br />
-    <a href="https://voaneves.github.io/salarioaleto/"><strong>Visite o Site »</strong></a>
+    <a href="https://voaneves.com/salarioaleto/"><strong>Visite o Site »</strong></a>
     <br>
     <a href="https://github.com/voaneves/salarioaleto/issues">Reporte um Bug</a>
     ·
@@ -55,7 +55,7 @@ Este projeto é um dossiê digital interativo, construído como uma Single-Page 
 A página guia o usuário através de uma análise completa, abordando a perda histórica do poder de compra, a disparidade salarial com outros órgãos do estado, a inviabilidade do plano de carreira e as consequências reais, como a evasão de talentos.
 
 <div align="center">
-  <a href="https://voaneves.github.io/salarioaleto/">
+  <a href="https://voaneves.com/salarioaleto/">
     <img src="https://placehold.co/800x450/f8fafc/334155?text=Screenshot+do+Projeto" alt="Screenshot da página inicial">
   </a>
 </div>
@@ -111,7 +111,7 @@ O deploy deste projeto no GitHub Pages é extremamente simples:
     * Vá para a aba "Settings" (Configurações) do seu repositório.
     * No menu lateral, clique em "Pages".
     * Na seção "Branch", selecione `main` (ou `master`), deixe a pasta como `/root` e clique em "Save".
-4.  **Pronto!** Após alguns minutos, seu site estará disponível no endereço `https://voaneves.github.io/salarioaleto/`.
+4.  **Pronto!** Após alguns minutos, seu site estará disponível no endereço `https://voaneves.com/salarioaleto/`.
 
 <p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
 

@@ -1,14 +1,19 @@
 <a name="readme-top"></a>
 
 <div align="center">
+  
   [![Contributors][contributors-shield]][contributors-url]
   [![Forks][forks-shield]][forks-url]
   [![Stargazers][stars-shield]][stars-url]
   [![Issues][issues-shield]][issues-url]
   [![MIT License][license-shield]][license-url]
+  
 </div>
 <br />
 <div align="center">
+  <a href="https://github.com/voaneves/salarioaleto">
+    <img src="assets/img/logo.svg" alt="Logotipo" />    
+  </a>
   <h3 align="center">📊 Dossiê Interativo: Análise da Remuneração na ALETO</h3>
   <p align="center">
     Análise de dados 📈, comparativos e assistente IA ✨ para apoiar a valorização dos servidores da Assembleia Legislativa do Tocantins.

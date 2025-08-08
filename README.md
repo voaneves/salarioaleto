@@ -138,7 +138,7 @@ Distribuído sob a Licença MIT. Veja `LICENSE.txt` para mais informações.
 
 ## Contato
 
-Seu Nome - [@seu_twitter](https://twitter.com/seu_twitter) - email@exemplo.com
+[LinkedIn](https://linkedin.com/in/voaneves) - [Potfolio](https://voaneves.com) - victorneves478@gmail.com
 
 Link do Projeto: [https://github.com/voaneves/salarioaleto](https://github.com/voaneves/salarioaleto)
 

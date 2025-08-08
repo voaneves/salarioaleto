@@ -14,7 +14,8 @@
     <!-- Visualization & Content Choices: 1. Charts (Chart.js) for high-level comparison. 2. Infographic cards (HTML/Tailwind) for impactful numbers. 3. A new timeline component (HTML/Tailwind) to visually narrate the salary history. 4. Image gallery with real documents for evidence. 5. A tabbed interface for detailed data tables with dynamic percentage difference calculation. All choices prioritize clarity, evidence, and impact. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        /* Prevents Flash of Unstyled Content (FOUC) by hiding the body until styles are loaded */
+        body { visibility: hidden; }
         .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 400px; max-height: 50vh; }
         @media (min-width: 768px) { .chart-container { height: 450px; } }
         .stat-card { background-color: white; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
@@ -34,8 +35,10 @@
 <body class="text-slate-700">
 
     <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-40 border-b border-slate-200">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-slate-800">Dossiê Remuneratório ALETO</h1>
+        <nav class="container mx-auto px-6 py-2 flex justify-between items-center">
+            <a href="#inicio" class="block" aria-label="Início">
+                <img loading="lazy" src="assets/img/logo.svg" alt="Logotipo Dossiê Salarial ALETO" class="h-14 w-auto">
+            </a>
             <div class="hidden md:flex space-x-6 text-sm font-medium">
                 <a href="#perda-salarial" class="nav-link">Perda Real</a>
                 <a href="#comparativo" class="nav-link">Disparidade</a>
@@ -164,13 +167,13 @@
                 </p>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                <a href="assets/img/diario1.jpg" target="_blank"><img src="assets/img/diario1.jpg" alt="Exoneração a pedido, publicado no diário" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
-                <a href="assets/img/diario2.jpg" target="_blank"><img src="assets/img/diario2.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
-                <a href="assets/img/diario3.jpg" target="_blank"><img src="assets/img/diario3.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
-                <a href="assets/img/diario4.jpg" target="_blank"><img src="assets/img/diario4.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
-                <a href="assets/img/diario5.jpg" target="_blank"><img src="assets/img/diario5.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
-                <a href="assets/img/diario6.jpg" target="_blank"><img src="assets/img/diario6.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
-                <a href="assets/img/diario7.jpg" target="_blank"><img src="assets/img/diario7.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+                <a href="assets/img/diario1.jpg" target="_blank"><img loading="lazy" src="assets/img/diario1.jpg" alt="Exoneração a pedido, publicado no diário" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+                <a href="assets/img/diario2.jpg" target="_blank"><img loading="lazy" src="assets/img/diario2.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+                <a href="assets/img/diario3.jpg" target="_blank"><img loading="lazy" src="assets/img/diario3.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+                <a href="assets/img/diario4.jpg" target="_blank"><img loading="lazy" src="assets/img/diario4.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+                <a href="assets/img/diario5.jpg" target="_blank"><img loading="lazy" src="assets/img/diario5.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+                <a href="assets/img/diario6.jpg" target="_blank"><img loading="lazy" src="assets/img/diario6.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
+                <a href="assets/img/diario7.jpg" target="_blank"><img loading="lazy" src="assets/img/diario7.jpg" alt="Pedido de reclassificação para final de fila" class="rounded-lg shadow-md w-full h-auto object-cover hover:scale-105 transition-transform duration-300"></a>
             </div>
         </section>
 
@@ -225,6 +228,9 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Make body visible once the DOM is loaded to prevent FOUC
+            document.body.style.visibility = 'visible';
+
             const formatCurrency = (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 
             // Chart Data & Initialization
